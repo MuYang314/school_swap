@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/spacing_large"
+    tools:context=".LoginActivity">
+
+    <!-- 跳过按钮 -->
+    <TextView
+        android:id="@+id/skipText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="跳过"
+        android:textColor="#666666"
+        android:textSize="@dimen/text_size_medium"
+        android:padding="@dimen/spacing_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Logo占位图 -->
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:contentDescription="@string/login_logo_description"
+        android:src="@drawable/logo"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 标题 -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:text="@string/app_name"
+        android:textColor="#333333"
+        android:textSize="@dimen/text_size_xxlarge"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logoImage" />
+
+    <!-- 副标题 -->
+    <TextView
+        android:id="@+id/subtitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:text="@string/login_subtitle"
+        android:textColor="#666666"
+        android:textSize="@dimen/text_size_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+
+    <!-- 邮箱输入框 -->
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/input_height"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:background="@drawable/edit_text_background"
+        android:hint="@string/hint_email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="@dimen/spacing_medium"
+        android:paddingEnd="@dimen/spacing_medium"
+        android:textSize="@dimen/text_size_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subtitleText"
+        app:layout_constraintWidth_percent="0.85" />
+
+    <!-- 密码输入框 -->
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/input_height"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:background="@drawable/edit_text_background"
+        android:hint="@string/hint_password"
+        android:inputType="textPassword"
+        android:paddingStart="@dimen/spacing_medium"
+        android:paddingEnd="@dimen/spacing_medium"
+        android:textSize="@dimen/text_size_medium"
+        app:layout_constraintEnd_toEndOf="@id/emailEditText"
+        app:layout_constraintStart_toStartOf="@id/emailEditText"
+        app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+
+    <!-- 登录按钮 -->
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:background="@drawable/button_background"
+        android:text="@string/btn_login"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/text_size_large"
+        app:layout_constraintEnd_toEndOf="@id/emailEditText"
+        app:layout_constraintStart_toStartOf="@id/emailEditText"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+
+    <!-- 底部链接容器 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_large"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/emailEditText"
+        app:layout_constraintStart_toStartOf="@id/emailEditText">
+
+        <!-- 注册账号链接 -->
+        <TextView
+            android:id="@+id/registerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="注册账号"
+            android:textColor="#4285F4"
+            android:textSize="14sp" />
+
+        <!-- 分隔符 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="|"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp" />
+
+        <!-- 忘记密码链接 -->
+        <TextView
+            android:id="@+id/forgotPasswordText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="忘记密码"
+            android:textColor="#4285F4"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
