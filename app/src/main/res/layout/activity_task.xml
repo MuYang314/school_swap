@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    tools:context=".HomeActivity">
+    tools:context=".TaskActivity">
 
     <!-- 搜索栏 -->
     <LinearLayout
@@ -24,7 +24,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@drawable/search_input_background"
-            android:hint="搜索商品"
+            android:hint="搜索任务"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:textSize="14sp"
@@ -64,10 +64,10 @@
                 android:layout_marginEnd="5dp" />
 
             <TextView
-                android:id="@+id/category_tab_digital"
+                android:id="@+id/category_tab_life"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="数码"
+                android:text="生活类"
                 android:textSize="14sp"
                 android:textColor="#666"
                 android:paddingLeft="15dp"
@@ -78,10 +78,10 @@
                 android:layout_marginEnd="5dp" />
 
             <TextView
-                android:id="@+id/category_tab_books"
+                android:id="@+id/category_tab_study"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="图书"
+                android:text="学习类"
                 android:textSize="14sp"
                 android:textColor="#666"
                 android:paddingLeft="15dp"
@@ -92,10 +92,10 @@
                 android:layout_marginEnd="5dp" />
 
             <TextView
-                android:id="@+id/category_tab_clothing"
+                android:id="@+id/category_tab_skill"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="服装"
+                android:text="技能类"
                 android:textSize="14sp"
                 android:textColor="#666"
                 android:paddingLeft="15dp"
@@ -106,24 +106,10 @@
                 android:layout_marginEnd="5dp" />
 
             <TextView
-                android:id="@+id/category_tab_sports"
+                android:id="@+id/category_tab_other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="运动"
-                android:textSize="14sp"
-                android:textColor="#666"
-                android:paddingLeft="15dp"
-                android:paddingTop="8dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="8dp"
-                android:background="@drawable/category_tab_background"
-                android:layout_marginEnd="5dp" />
-
-            <TextView
-                android:id="@+id/category_tab_lifestyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="生活"
+                android:text="其他"
                 android:textSize="14sp"
                 android:textColor="#666"
                 android:paddingLeft="15dp"
@@ -143,13 +129,12 @@
         app:layout_constraintTop_toBottomOf="@id/category_tabs"
         app:layout_constraintBottom_toTopOf="@id/tab_bar">
 
-        <!-- 商品网格 -->
+        <!-- 任务列表 -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/product_grid"
+            android:id="@+id/task_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <!-- 浮动按钮 -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -186,7 +171,7 @@
                 android:id="@+id/home_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/home_active" />
+                android:src="@drawable/home" />
 
             <TextView
                 android:id="@+id/home_text"
@@ -194,7 +179,7 @@
                 android:layout_height="wrap_content"
                 android:text="首页"
                 android:textSize="12sp"
-                android:textColor="#4CAF50" />
+                android:textColor="#999" />
         </LinearLayout>
 
         <LinearLayout
@@ -208,7 +193,7 @@
                 android:id="@+id/task_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/task" />
+                android:src="@drawable/task_active" />
 
             <TextView
                 android:id="@+id/task_text"
@@ -216,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:text="任务"
                 android:textSize="12sp"
-                android:textColor="#999" />
+                android:textColor="#4CAF50" />
         </LinearLayout>
 
         <LinearLayout

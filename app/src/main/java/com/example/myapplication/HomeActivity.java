@@ -136,7 +136,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // 设置导航栏点击事件
+    // 设置导航栏点击事件 - 修改为TaskActivity的方式
     private void setupTabBar() {
         // 获取导航栏的按钮
         ImageView homeIcon = findViewById(R.id.home_icon);
@@ -149,38 +149,27 @@ public class HomeActivity extends AppCompatActivity {
         TextView messageText = findViewById(R.id.message_text);
         TextView userText = findViewById(R.id.user_text);
 
-        // 设置默认选中状态
-        homeIcon.setImageResource(R.drawable.home_active);
-        homeText.setTextColor(getResources().getColor(R.color.active_color));
-
         // 设置点击事件
-        homeIcon.setOnClickListener(v -> switchTab(homeIcon, homeText, R.drawable.home_active, R.color.active_color));
-        taskIcon.setOnClickListener(v -> switchTab(taskIcon, taskText, R.drawable.task_active, R.color.active_color));
-        messageIcon.setOnClickListener(v -> switchTab(messageIcon, messageText, R.drawable.message_active, R.color.active_color));
-        userIcon.setOnClickListener(v -> switchTab(userIcon, userText, R.drawable.user_active, R.color.active_color));
-    }
+        homeIcon.setOnClickListener(v -> {
+            // 已经在首页，不需要处理
+        });
 
-    // 切换页面和状态
-    private void switchTab(ImageView icon, TextView text, int activeIconRes, int activeColorRes) {
-        // 更新图标和文字颜色
-        icon.setImageResource(activeIconRes);
-        text.setTextColor(getResources().getColor(activeColorRes));
+        taskIcon.setOnClickListener(v -> {
+            Intent taskIntent = new Intent(this, TaskActivity.class);
+            startActivity(taskIntent);
+            finish();
+        });
 
-        // 根据点击的按钮切换页面
-//        if (icon.getId() == R.id.home_icon) {
-//            // 切换到首页
-//        } else if (icon.getId() == R.id.task_icon) {
-//            // 切换到任务页面
-//            Intent taskIntent = new Intent(this, TaskActivity.class);
-//            startActivity(taskIntent);
-//        } else if (icon.getId() == R.id.message_icon) {
-//            // 切换到消息页面
+//        messageIcon.setOnClickListener(v -> {
 //            Intent messageIntent = new Intent(this, MessageActivity.class);
 //            startActivity(messageIntent);
-//        } else if (icon.getId() == R.id.user_icon) {
-//            // 切换到我的页面
+//            finish();
+//        });
+
+//        userIcon.setOnClickListener(v -> {
 //            Intent userIntent = new Intent(this, UserActivity.class);
 //            startActivity(userIntent);
-//        }
+//            finish();
+//        });
     }
 }
