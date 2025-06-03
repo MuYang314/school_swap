@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.myapplication.network.HttpClient;
@@ -94,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void navigateToMainActivity() {
         // 跳转到主页面
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
@@ -113,6 +112,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void onSkipClick() {
         // TODO: 跳转到主页
-        Toast.makeText(this, "跳过功能待实现", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

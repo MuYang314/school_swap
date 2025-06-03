@@ -20,6 +20,7 @@
     
     <!-- 密码找回页面 -->
     <string name="forgot_password_title">重置密码</string>
+    <string name="reset_subtitle">找回一个密码</string>
     <string name="forgot_password_logo_description">重置密码页面Logo</string>
     <string name="hint_new_password">请输入新密码</string>
     <string name="hint_confirm_new_password">请确认新密码</string>
