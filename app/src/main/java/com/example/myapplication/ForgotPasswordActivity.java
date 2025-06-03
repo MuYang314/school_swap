@@ -2,6 +2,9 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -12,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.network.HttpClient;
+
 public class ForgotPasswordActivity extends AppCompatActivity {
     private EditText emailEditText;
     private EditText verificationCodeEditText;
@@ -20,6 +25,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private Button resetButton;
     private Button getVerificationCodeButton;
     private TextView backToLoginText;
+    private CountDownTimer countDownTimer;
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +56,110 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void onGetVerificationCode() {
-        if (validateInputs()) {
-            // TODO: 实现注册逻辑
-            Toast.makeText(ForgotPasswordActivity.this, "验证码获取功能待实现", Toast.LENGTH_SHORT).show();
+        String email = emailEditText.getText().toString().trim();
+        
+        // 验证邮箱
+        if (TextUtils.isEmpty(email)) {
+            emailEditText.setError("请输入邮箱");
+            emailEditText.requestFocus();
+            return;
         }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError("请输入有效的邮箱地址");
+            emailEditText.requestFocus();
+            return;
+        }
+
+        // 禁用获取验证码按钮
+        getVerificationCodeButton.setEnabled(false);
+
+        // 请求验证码
+        HttpClient.getVerificationCode(email, new HttpClient.ResponseCallback() {
+            @Override
+            public void onSuccess(String message) {
+                handler.post(() -> {
+                    Toast.makeText(ForgotPasswordActivity.this, message, Toast.LENGTH_SHORT).show();
+                    startCountDown();
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                handler.post(() -> {
+                    Toast.makeText(ForgotPasswordActivity.this, error, Toast.LENGTH_SHORT).show();
+                    getVerificationCodeButton.setEnabled(true);
+                });
+            }
+        });
+    }
+
+    private void startCountDown() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        countDownTimer = new CountDownTimer(60000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                handler.post(() -> {
+                    getVerificationCodeButton.setText(String.format("%ds后重试", millisUntilFinished / 1000));
+                });
+            }
+
+            @Override
+            public void onFinish() {
+                handler.post(() -> {
+                    getVerificationCodeButton.setEnabled(true);
+                    getVerificationCodeButton.setText("验证码");
+                });
+            }
+        }.start();
     }
 
     private void onResetClick() {
-        if (validateInputs()) {
-            // TODO: 实现实际的密码重置API调用
-            // 这里暂时只显示成功消息并返回登录页面
-            Toast.makeText(this, "密码重置功能待实现", Toast.LENGTH_LONG).show();
+        if (!validateInputs()) {
+            return;
         }
+
+        String email = emailEditText.getText().toString().trim();
+        String verificationCode = verificationCodeEditText.getText().toString().trim();
+        String newPassword = newPasswordEditText.getText().toString();
+        String confirmPassword = confirmPasswordEditText.getText().toString();
+
+        // 验证验证码
+        if (TextUtils.isEmpty(verificationCode)) {
+            verificationCodeEditText.setError("请输入验证码");
+            verificationCodeEditText.requestFocus();
+            return;
+        }
+        if (verificationCode.length() != 4) {
+            verificationCodeEditText.setError("请输入6位验证码");
+            verificationCodeEditText.requestFocus();
+            return;
+        }
+
+        // 禁用重置按钮
+        resetButton.setEnabled(false);
+
+        // 调用重置密码API
+        HttpClient.resetPassword(email, newPassword, confirmPassword, verificationCode, new HttpClient.ResponseCallback() {
+            @Override
+            public void onSuccess(String message) {
+                handler.post(() -> {
+                    Toast.makeText(ForgotPasswordActivity.this, message, Toast.LENGTH_SHORT).show();
+                    // 重置成功后返回登录页面
+                    finish();
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                handler.post(() -> {
+                    Toast.makeText(ForgotPasswordActivity.this, error, Toast.LENGTH_SHORT).show();
+                    resetButton.setEnabled(true);
+                });
+            }
+        });
     }
 
     private boolean validateInputs() {
@@ -109,5 +208,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private void onBackToLoginClick() {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 }
