@@ -3,9 +3,14 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +32,12 @@ public class TaskActivity extends AppCompatActivity {
     // 添加分类标签数组
     private TextView[] categoryTabs;
     private int selectedTabIndex = 0; // 默认选中第一个标签
+    private EditText searchInput;
+    private RecyclerView taskList;
+    private TaskAdapter taskAdapter;
+    private Handler searchHandler = new Handler();
+    private Runnable searchRunnable;
+    private static final int SEARCH_DELAY = 300; // 防抖延迟300毫秒
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +45,10 @@ public class TaskActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_task);
 
-        // 初始化RecyclerView
-        RecyclerView taskList = findViewById(R.id.task_list);
+        /// 初始化RecyclerView
+        taskList = findViewById(R.id.task_list);
         taskList.setLayoutManager(new LinearLayoutManager(this));
-        TaskAdapter taskAdapter = new TaskAdapter(getDummyTasks());
+        taskAdapter = new TaskAdapter(getDummyTasks());
         taskList.setAdapter(taskAdapter);
 
         // 设置沉浸式状态栏
@@ -51,6 +62,89 @@ public class TaskActivity extends AppCompatActivity {
         setupTabBar();
         // 初始化分类标签
         initCategoryTabs();
+        // 初始化搜索框
+        initSearchView();
+    }
+
+    private void initSearchView() {
+        searchInput = findViewById(R.id.search_input);
+
+        // 设置文本变化监听
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // 防抖处理
+                if (searchRunnable != null) {
+                    searchHandler.removeCallbacks(searchRunnable);
+                }
+
+                searchRunnable = () -> {
+                    String keyword = s.toString().trim();
+                    filterTasks(keyword);
+                };
+
+                searchHandler.postDelayed(searchRunnable, SEARCH_DELAY);
+            }
+        });
+
+        // 设置键盘搜索按钮监听
+        searchInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                String keyword = searchInput.getText().toString().trim();
+                filterTasks(keyword);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    // 根据关键词过滤任务
+    private void filterTasks(String keyword) {
+        if (keyword.isEmpty()) {
+            // 如果搜索框为空，显示当前分类的任务
+            loadCategoryData(selectedTabIndex);
+            return;
+        }
+
+        List<Task> allTasks;
+        switch (selectedTabIndex) {
+            case 0: // 全部
+                allTasks = getDummyTasks();
+                break;
+            case 1: // 生活类
+                allTasks = getLifeTasks();
+                break;
+            case 2: // 学习类
+                allTasks = getStudyTasks();
+                break;
+            case 3: // 技能类
+                allTasks = getSkillTasks();
+                break;
+            case 4: // 其他
+                allTasks = getOtherTasks();
+                break;
+            default:
+                allTasks = getDummyTasks();
+        }
+
+        // 过滤任务
+        List<Task> filteredTasks = new ArrayList<>();
+        for (Task task : allTasks) {
+            if (task.getTitle().contains(keyword) ||
+                    task.getDescription().contains(keyword)) {
+                filteredTasks.add(task);
+            }
+        }
+
+        // 更新RecyclerView
+        taskAdapter = new TaskAdapter(filteredTasks);
+        taskList.setAdapter(taskAdapter);
     }
 
     // 初始化分类标签并设置点击事件
@@ -130,8 +224,7 @@ public class TaskActivity extends AppCompatActivity {
         }
 
         // 更新RecyclerView
-        RecyclerView taskList = findViewById(R.id.task_list);
-        TaskAdapter taskAdapter = new TaskAdapter(tasks);
+        taskAdapter = new TaskAdapter(tasks);
         taskList.setAdapter(taskAdapter);
     }
 
