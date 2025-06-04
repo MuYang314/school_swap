@@ -28,7 +28,15 @@
         </activity>
         <activity
             android:name=".TaskActivity"
-            android:exported="true">
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".MessageActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".UserActivity"
+            android:exported="false">
         </activity>
         <activity
             android:name=".RegisterActivity"

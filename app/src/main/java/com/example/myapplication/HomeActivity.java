@@ -160,16 +160,16 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         });
 
-//        messageIcon.setOnClickListener(v -> {
-//            Intent messageIntent = new Intent(this, MessageActivity.class);
-//            startActivity(messageIntent);
-//            finish();
-//        });
+        messageIcon.setOnClickListener(v -> {
+            Intent messageIntent = new Intent(this, MessageActivity.class);
+            startActivity(messageIntent);
+            finish();
+        });
 
-//        userIcon.setOnClickListener(v -> {
-//            Intent userIntent = new Intent(this, UserActivity.class);
-//            startActivity(userIntent);
-//            finish();
-//        });
+        userIcon.setOnClickListener(v -> {
+            Intent userIntent = new Intent(this, UserActivity.class);
+            startActivity(userIntent);
+            finish();
+        });
     }
 }
