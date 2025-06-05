@@ -30,7 +30,6 @@
     <string name="hint_verification_code">请输入验证码</string>
     <string name="btn_get_code">验证码</string>
 
-    <!-- 商品分类 -->
     <string-array name="product_categories">
         <item>数码产品</item>
         <item>图书教材</item>
@@ -39,7 +38,6 @@
         <item>生活用品</item>
     </string-array>
 
-    <!-- 任务分类 -->
     <string-array name="task_categories">
         <item>生活类</item>
         <item>学习类</item>
