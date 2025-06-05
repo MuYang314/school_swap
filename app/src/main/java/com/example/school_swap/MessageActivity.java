@@ -155,7 +155,7 @@ public class MessageActivity extends AppCompatActivity {
         // 设置当前页面的图标和文字颜色
         homeText.setTextColor(getResources().getColor(R.color.tab_inactive));
         taskText.setTextColor(getResources().getColor(R.color.tab_inactive));
-        messageText.setTextColor(getResources().getColor(R.color.tab_active));
+        messageText.setTextColor(getResources().getColor(R.color.green));
         userText.setTextColor(getResources().getColor(R.color.tab_inactive));
 
         // 设置点击事件

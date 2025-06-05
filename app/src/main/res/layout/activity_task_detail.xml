@@ -54,10 +54,14 @@
                         android:id="@+id/tv_task_category"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#E3F2FD"
-                        android:text="学习类"
+                        android:text="生活类"
+                        android:textSize="12sp"
                         android:textColor="#2196F3"
-                        android:textSize="12sp" />
+                        android:background="@drawable/task_category_background"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp" />
 
                     <View
                         android:layout_width="0dp"
@@ -71,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:text="¥50"
                         android:textColor="#FF9800"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -172,7 +176,7 @@
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_chevron_right"
+                    android:src="@drawable/ic_arrow_right"
                     app:tint="#ccc" />
             </RelativeLayout>
         </LinearLayout>
