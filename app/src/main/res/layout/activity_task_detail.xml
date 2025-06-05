@@ -240,7 +240,7 @@
             android:layout_height="45dp"
             android:layout_weight="1"
             android:background="@drawable/button_primary"
-            android:text="联系卖家"
+            android:text="申请接单"
             android:textSize="@dimen/text_small"
             android:textStyle="bold"
             android:color="@color/white"
