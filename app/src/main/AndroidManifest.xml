@@ -23,6 +23,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".RegisterActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".HomeActivity"
             android:exported="true">
         </activity>
@@ -39,12 +47,9 @@
             android:exported="false">
         </activity>
         <activity
-            android:name=".RegisterActivity"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name=".ForgotPasswordActivity"
-            android:exported="false">
+            android:name=".ProductDetailActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
         </activity>
     </application>
 
