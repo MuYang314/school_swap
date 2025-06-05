@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.school_swap;
 
 import android.content.Context;
 

@@ -1,10 +1,10 @@
-package com.example.myapplication;
+package com.example.school_swap;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.example.myapplication.network.HttpClient;
+import com.example.school_swap.network.HttpClient;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {

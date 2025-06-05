@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.school_swap;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -47,6 +47,7 @@ public class HomeActivity extends AppCompatActivity {
         // 初始化RecyclerView
         RecyclerView productGrid = findViewById(R.id.product_grid);
         productGrid.setLayoutManager(new GridLayoutManager(this, 2));
+
         // 设置适配器并添加点击监听
         productAdapter = new ProductAdapter(getDummyProducts(), productId -> {
             // 点击商品时跳转到详情页
@@ -55,6 +56,11 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
         productGrid.setAdapter(productAdapter);
+
+        // 为发布按钮添加点击事件
+        findViewById(R.id.fab_button).setOnClickListener(v -> {
+            startActivity(new Intent(this, PostProductActivity.class));
+        });
 
         // 设置沉浸式状态栏
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

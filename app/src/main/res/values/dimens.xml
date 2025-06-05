@@ -26,4 +26,6 @@
     <dimen name="corner_radius">8dp</dimen>
     <dimen name="corner_radius_small">4dp</dimen>
     <dimen name="corner_radius_large">16dp</dimen>
+
+    <dimen name="image_size">80dp</dimen>
 </resources>

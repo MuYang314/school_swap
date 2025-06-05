@@ -1,4 +1,4 @@
-package com.example.myapplication.network;
+package com.example.school_swap.network;
 
 import com.google.gson.Gson;
 import okhttp3.Call;

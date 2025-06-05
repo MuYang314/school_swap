@@ -1,13 +1,11 @@
-package com.example.myapplication;
+package com.example.school_swap;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,7 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.network.HttpClient;
+import com.example.school_swap.network.HttpClient;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
     private EditText emailEditText;
