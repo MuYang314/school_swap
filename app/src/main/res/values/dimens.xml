@@ -36,4 +36,28 @@
     <dimen name="input_radius">4dp</dimen>           <!-- 输入框圆角 -->
     <dimen name="button_radius">25dp</dimen>         <!-- 按钮圆角 -->
     <dimen name="divider_height">1dp</dimen>         <!-- 分割线高度 -->
+    <!-- 字体尺寸 -->
+    <dimen name="text_large">24sp</dimen>     <!-- 大标题/价格 -->
+    <dimen name="text_medium">18sp</dimen>    <!-- 中等标题 -->
+    <dimen name="text_normal">16sp</dimen>    <!-- 常规标题 -->
+    <dimen name="text_small">14sp</dimen>     <!-- 正文/描述 -->
+    <dimen name="text_tiny">12sp</dimen>      <!-- 元信息/标签 -->
+
+    <!-- 边距 -->
+    <dimen name="margin_large">20dp</dimen>   <!-- 大边距 -->
+    <dimen name="margin_medium">15dp</dimen>  <!-- 中等边距 -->
+    <dimen name="margin_small">10dp</dimen>   <!-- 小边距 -->
+    <dimen name="margin_tiny">5dp</dimen>     <!-- 微小边距 -->
+
+    <!-- 尺寸 -->
+    <dimen name="status_bar_height">44dp</dimen>      <!-- 状态栏高度 -->
+    <dimen name="product_slider_height">375dp</dimen> <!-- 轮播图高度 -->
+    <dimen name="seller_avatar_size">50dp</dimen>     <!-- 卖家头像尺寸 -->
+    <dimen name="fab_size">60dp</dimen>               <!-- 悬浮按钮尺寸 -->
+    <dimen name="tab_bar_height">60dp</dimen>         <!-- 底部导航栏高度 -->
+
+    <!-- 圆角 -->
+    <dimen name="radius_large">25dp</dimen>   <!-- 大圆角（按钮） -->
+    <dimen name="radius_medium">10dp</dimen>  <!-- 中等圆角（卡片） -->
+    <dimen name="radius_small">4dp</dimen>    <!-- 小圆角（标签） -->
 </resources>

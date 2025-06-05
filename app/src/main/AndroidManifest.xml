@@ -53,12 +53,10 @@
         </activity>
         <activity
             android:name=".ProductDetailActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
+            android:exported="false">
         </activity>
         <activity
             android:name=".TaskDetailActivity"
-            android:theme="@style/AppTheme"
             android:exported="false">
         </activity>
         <activity
