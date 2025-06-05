@@ -28,4 +28,12 @@
     <dimen name="corner_radius_large">16dp</dimen>
 
     <dimen name="image_size">80dp</dimen>
+
+    <dimen name="form_label_size">14sp</dimen>       <!-- 标签文字大小 -->
+    <dimen name="input_text_size">14sp</dimen>       <!-- 输入框文字大小 -->
+    <dimen name="button_text_size">16sp</dimen>      <!-- 按钮文字大小 -->
+    <dimen name="form_padding_horizontal">15dp</dimen> <!-- 表单水平内边距 -->
+    <dimen name="input_radius">4dp</dimen>           <!-- 输入框圆角 -->
+    <dimen name="button_radius">25dp</dimen>         <!-- 按钮圆角 -->
+    <dimen name="divider_height">1dp</dimen>         <!-- 分割线高度 -->
 </resources>

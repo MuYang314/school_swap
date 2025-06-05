@@ -59,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 为发布按钮添加点击事件
         findViewById(R.id.fab_button).setOnClickListener(v -> {
-            startActivity(new Intent(this, PostProductActivity.class));
+            startActivity(new Intent(this, PublishProductActivity.class));
         });
 
         // 设置沉浸式状态栏

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 任务类型（新增） -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/form_padding_horizontal"
+            android:paddingVertical="15dp"
+            android:background="@android:color/white"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="任务类型"
+                android:textColor="@color/textPrimary"
+                android:textSize="@dimen/form_label_size"
+                android:layout_marginBottom="10dp"/>
+
+            <Spinner
+                android:id="@+id/spinner_task_type"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/input_bg"
+                android:paddingHorizontal="15dp"
+                android:spinnerMode="dropdown"/>
+        </LinearLayout>
+
+        <!-- 任务标题（替代商品名称） -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/form_padding_horizontal"
+            android:paddingVertical="15dp"
+            android:background="@android:color/white"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="任务标题"
+                android:textColor="@color/textPrimary"
+                android:textSize="@dimen/form_label_size"
+                android:layout_marginBottom="10dp"/>
+
+            <EditText
+                android:id="@+id/et_task_title"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/input_bg"
+                android:paddingHorizontal="15dp"
+                android:textSize="@dimen/input_text_size"
+                android:hint="请输入任务标题（如：代取快递）"
+                android:singleLine="true"/>
+        </LinearLayout>
+
+        <!-- 任务描述（强调任务要求） -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/form_padding_horizontal"
+            android:paddingVertical="15dp"
+            android:background="@android:color/white"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="任务要求"
+                android:textColor="@color/textPrimary"
+                android:textSize="@dimen/form_label_size"
+                android:layout_marginBottom="10dp"/>
+
+            <EditText
+                android:id="@+id/et_task_desc"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/input_bg"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="10dp"
+                android:textSize="@dimen/input_text_size"
+                android:hint="请说明具体需求和注意事项（如：快递点位置、取件码）"
+                android:inputType="textMultiLine"/>
+        </LinearLayout>
+
+        <!-- 截止时间（新增，点击弹出选择器） -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/form_padding_horizontal"
+            android:paddingVertical="15dp"
+            android:background="@android:color/white"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="截止时间"
+                android:textColor="@color/textPrimary"
+                android:textSize="@dimen/form_label_size"
+                android:layout_marginBottom="10dp"/>
+
+            <EditText
+                android:id="@+id/et_deadline"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/input_bg"
+                android:paddingHorizontal="15dp"
+                android:textSize="@dimen/input_text_size"
+                android:hint="请选择截止时间"
+                android:singleLine="true"
+                android:focusable="false"
+                android:clickable="true"/>
+        </LinearLayout>
+
+        <!-- 任务地点（新增） -->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:paddingHorizontal="@dimen/form_padding_horizontal"-->
+<!--            android:paddingVertical="15dp"-->
+<!--            android:background="@android:color/white"-->
+<!--            android:layout_marginBottom="10dp">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="任务地点"-->
+<!--                android:textColor="@color/textPrimary"-->
+<!--                android:textSize="@dimen/form_label_size"-->
+<!--                android:layout_marginBottom="10dp"/>-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/et_location"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:background="@drawable/input_bg"-->
+<!--                android:paddingHorizontal="15dp"-->
+<!--                android:textSize="@dimen/input_text_size"-->
+<!--                android:hint="请输入任务地点（如：3号教学楼）"-->
+<!--                android:singleLine="true"/>-->
+<!--        </LinearLayout>-->
+
+        <!-- 悬赏金额（替代商品价格，颜色不同） -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/form_padding_horizontal"
+            android:paddingVertical="15dp"
+            android:background="@android:color/white"
+            android:layout_marginBottom="30dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="悬赏金额"
+                android:textColor="@color/textPrimary"
+                android:textSize="@dimen/form_label_size"
+                android:layout_marginBottom="10dp"/>
+
+            <EditText
+                android:id="@+id/et_task_reward"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/input_bg"
+                android:paddingHorizontal="15dp"
+                android:textSize="@dimen/input_text_size"
+                android:hint="请输入悬赏金额（元）"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorTaskPrice"/>
+        </LinearLayout>
+
+        <!-- 提交按钮 -->
+        <Button
+            android:id="@+id/btn_submit_task"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_submit_bg"
+            android:text="发布任务"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/button_text_size"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+</ScrollView>

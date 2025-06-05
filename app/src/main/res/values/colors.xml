@@ -6,4 +6,13 @@
     <color name="tab_active">#4CAF50</color>
     <color name="green">#4CAF50</color>
     <color name="tab_inactive">#999</color>
+    <color name="colorPrimary">#4CAF50</color>       <!-- 主题色 -->
+    <color name="colorPrice">#FF5722</color>         <!-- 价格色 -->
+    <color name="colorTaskPrice">#FF9800</color>     <!-- 任务悬赏色 -->
+    <color name="background">#f5f5f5</color>         <!-- 背景色 -->
+    <color name="divider">#f0f0f0</color>            <!-- 分割线颜色 -->
+    <color name="inputBorder">#e0e0e0</color>        <!-- 输入框边框色 -->
+    <color name="textPrimary">#333333</color>        <!-- 主文本色 -->
+    <color name="textSecondary">#666666</color>      <!-- 次文本色 -->
+    <color name="textHint">#999999</color>           <!-- 提示文本色 -->
 </resources>
