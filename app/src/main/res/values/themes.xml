@@ -8,12 +8,11 @@
 
     </style>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-<!--        <item name="colorPrimary">@color/white</item>-->
         <!-- 关键属性：透明状态栏 -->
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <!-- 或者使用以下属性（API 21+） -->
-<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.MyApplication" parent="Base.Theme.MyApplication" />

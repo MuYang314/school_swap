@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -45,10 +44,16 @@ public class TaskActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_task);
 
-        /// 初始化RecyclerView
+        // 初始化RecyclerView
         taskList = findViewById(R.id.task_list);
         taskList.setLayoutManager(new LinearLayoutManager(this));
-        taskAdapter = new TaskAdapter(getDummyTasks());
+        // 设置适配器并添加点击监听
+        taskAdapter = new TaskAdapter(getDummyTasks(), taskId -> {
+            // 点击任务时跳转到详情页
+            Intent intent = new Intent(TaskActivity.this, TaskDetailActivity.class);
+            intent.putExtra("task_id", taskId);
+            startActivity(intent);
+        });
         taskList.setAdapter(taskAdapter);
 
         // 设置沉浸式状态栏
@@ -143,7 +148,11 @@ public class TaskActivity extends AppCompatActivity {
         }
 
         // 更新RecyclerView
-        taskAdapter = new TaskAdapter(filteredTasks);
+        taskAdapter = new TaskAdapter(filteredTasks, taskId -> {
+            Intent intent = new Intent(TaskActivity.this, TaskDetailActivity.class);
+            intent.putExtra("task_id", taskId);
+            startActivity(intent);
+        });
         taskList.setAdapter(taskAdapter);
     }
 
@@ -224,17 +233,21 @@ public class TaskActivity extends AppCompatActivity {
         }
 
         // 更新RecyclerView
-        taskAdapter = new TaskAdapter(tasks);
+        taskAdapter = new TaskAdapter(tasks, taskId -> {
+            Intent intent = new Intent(TaskActivity.this, TaskDetailActivity.class);
+            intent.putExtra("task_id", taskId);
+            startActivity(intent);
+        });
         taskList.setAdapter(taskAdapter);
     }
 
     // 添加不同分类的数据获取方法
     private List<Task> getLifeTasks() {
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task("帮取快递（菜鸟驿站）", "生活类", 15,
+        tasks.add(new Task(1, "帮取快递（菜鸟驿站）", "生活类", 15,
                 "需要有人帮忙从9号宿舍楼下的菜鸟驿站取一个小件快递，送到14号楼307室，今天下午6点前送达即可。",
                 "信息学院 • 张同学", "今天17:00截止"));
-        tasks.add(new Task("代买午餐", "生活类", 10,
+        tasks.add(new Task(2, "代买午餐", "生活类", 10,
                 "帮忙从食堂带一份午餐到图书馆3楼自习区，要求12点前送达。",
                 "文学院 • 王同学", "今天12:00截止"));
         return tasks;
@@ -242,10 +255,10 @@ public class TaskActivity extends AppCompatActivity {
 
     private List<Task> getStudyTasks() {
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task("高数作业辅导（微积分部分）", "学习类", 50,
+        tasks.add(new Task(3, "高数作业辅导（微积分部分）", "学习类", 50,
                 "需要一位数学好的同学帮忙辅导高等数学作业，主要是微积分部分，大约需要1-2小时。",
                 "工程学院 • 李同学", "明天20:00截止"));
-        tasks.add(new Task("英语口语陪练", "学习类", 80,
+        tasks.add(new Task(4, "英语口语陪练", "学习类", 80,
                 "寻找英语口语好的同学每周陪练2次，每次1小时，帮助提高口语水平。",
                 "外语学院 • 赵同学", "长期有效"));
         return tasks;
@@ -253,10 +266,10 @@ public class TaskActivity extends AppCompatActivity {
 
     private List<Task> getSkillTasks() {
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task("社团海报设计（PS/AI）", "技能类", 200,
+        tasks.add(new Task(5, "社团海报设计（PS/AI）", "技能类", 200,
                 "需要设计一张社团招新海报，要求有创意，能够吸引新生。提供社团logo和基本信息，需要会PS或AI。",
                 "艺术学院 • 王同学", "3天后截止"));
-        tasks.add(new Task("小程序开发协助", "技能类", 500,
+        tasks.add(new Task(6, "小程序开发协助", "技能类", 500,
                 "需要一个懂微信小程序开发的同学协助完成毕业设计项目，时间比较灵活。",
                 "计算机学院 • 刘同学", "两周内有效"));
         return tasks;
@@ -264,24 +277,25 @@ public class TaskActivity extends AppCompatActivity {
 
     private List<Task> getOtherTasks() {
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task("校园导游", "其他", 100,
+        tasks.add(new Task(7, "校园导游", "其他", 100,
                 "需要一位熟悉校园的同学带新生家长参观校园，大约2小时。",
                 "招生办 • 李老师", "本周六上午"));
-        tasks.add(new Task("活动志愿者", "其他", 0,
+        tasks.add(new Task(8, "活动志愿者", "其他", 0,
                 "招募校园开放日活动志愿者，提供志愿者证明和午餐。",
                 "团委 • 学生会", "下周日全天"));
         return tasks;
     }
+
     // 创建虚拟任务数据
     private List<Task> getDummyTasks() {
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task("帮取快递（菜鸟驿站）", "生活类", 15,
+        tasks.add(new Task(1, "帮取快递（菜鸟驿站）", "生活类", 15,
                 "需要有人帮忙从9号宿舍楼下的菜鸟驿站取一个小件快递，送到14号楼307室，今天下午6点前送达即可。",
                 "信息学院 • 张同学", "今天17:00截止"));
-        tasks.add(new Task("高数作业辅导（微积分部分）", "学习类", 50,
+        tasks.add(new Task(3, "高数作业辅导（微积分部分）", "学习类", 50,
                 "需要一位数学好的同学帮忙辅导高等数学作业，主要是微积分部分，大约需要1-2小时。",
                 "工程学院 • 李同学", "明天20:00截止"));
-        tasks.add(new Task("社团海报设计（PS/AI）", "技能类", 200,
+        tasks.add(new Task(5, "社团海报设计（PS/AI）", "技能类", 200,
                 "需要设计一张社团招新海报，要求有创意，能够吸引新生。提供社团logo和基本信息，需要会PS或AI。",
                 "艺术学院 • 王同学", "3天后截止"));
         return tasks;
@@ -290,9 +304,16 @@ public class TaskActivity extends AppCompatActivity {
     // 任务适配器
     static class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
         private final List<Task> taskList;
+        private final OnItemClickListener listener;
 
-        TaskAdapter(List<Task> taskList) {
+        // 添加点击监听接口
+        interface OnItemClickListener {
+            void onItemClick(int taskId);
+        }
+
+        TaskAdapter(List<Task> taskList, OnItemClickListener listener) {
             this.taskList = taskList;
+            this.listener = listener;
         }
 
         @NonNull
@@ -312,6 +333,13 @@ public class TaskActivity extends AppCompatActivity {
             holder.taskDescription.setText(task.getDescription());
             holder.taskMeta.setText(task.getMeta());
             holder.taskDeadline.setText(task.getDeadline());
+
+            // 设置点击事件
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(task.getId());
+                }
+            });
         }
 
         @Override
@@ -341,6 +369,7 @@ public class TaskActivity extends AppCompatActivity {
 
     // 任务类
     static class Task {
+        private final int id;
         private final String title;
         private final String category;
         private final int price;
@@ -348,13 +377,18 @@ public class TaskActivity extends AppCompatActivity {
         private final String meta;
         private final String deadline;
 
-        Task(String title, String category, int price, String description, String meta, String deadline) {
+        Task(int id, String title, String category, int price, String description, String meta, String deadline) {
+            this.id = id;
             this.title = title;
             this.category = category;
             this.price = price;
             this.description = description;
             this.meta = meta;
             this.deadline = deadline;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public String getTitle() {
