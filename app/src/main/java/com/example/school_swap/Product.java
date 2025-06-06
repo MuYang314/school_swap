@@ -8,6 +8,7 @@ public class Product {
     private int id;
     private String title;
     private double price;
+    private int count;
     private String category;
     private String description;
     private List<String> imageUrls;
@@ -20,12 +21,13 @@ public class Product {
     public Product() {}
 
     // 全参构造方法
-    public Product(int id, String title, double price, String description,
+    public Product(int id, String title, double price, int count, String description,
                    List<String> imageUrls, String sellerName, String sellerMeta,
                    boolean isFavorite) {
         this.id = id;
         this.title = title;
         this.price = price;
+        this.count = count;
         this.description = description;
         this.imageUrls = imageUrls;
         this.sellerName = sellerName;
@@ -37,6 +39,7 @@ public class Product {
     public int getId() { return id; }
     public String getTitle() { return title; }
     public double getPrice() { return price; }
+    public int getCount() { return count; }
     public String getCategory() {return category; }
     public String getDescription() { return description; }
     public List<String> getImageUrls() { return imageUrls; }
@@ -54,6 +57,7 @@ public class Product {
         }
         this.price = price;
     }
+    public void setCount(int count) { this.count = count; }
     public void setCategory(String category) {this.category = category;}
     public void setDescription(String description) { this.description = description; }
     public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }

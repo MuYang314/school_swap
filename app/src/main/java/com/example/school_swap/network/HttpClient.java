@@ -18,7 +18,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 public class HttpClient {
-    private static final String BASE_URL = "http://192.168.151.76:8000";
+    private static final String BASE_URL = "http://192.168.198.76:8000";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final OkHttpClient client = new OkHttpClient();
     private static final Gson gson = new Gson();
@@ -248,6 +248,7 @@ public class HttpClient {
                                     double price = good.getDouble("price");
                                     String category = good.getString("category");
                                     String created_at = good.getString("created_at");
+                                    int count = good.getInt("count");
                                     List<String> imageUrls = gson.fromJson(good.getJSONArray("images").toString(), new TypeToken<List<String>>() {}.getType());
                                     Product product = new Product();
                                     product.setId(id);
@@ -256,6 +257,7 @@ public class HttpClient {
                                     product.setCategory(category);
                                     product.setImageUrls(imageUrls);
                                     product.setCreated_at(created_at);
+                                    product.setCount(count);
                                     products.add(product);
                                 }
                                 callback.onSuccess(products);
