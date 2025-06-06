@@ -8,8 +8,10 @@ public class Product {
     private int id;
     private String title;
     private double price;
+    private String category;
     private String description;
     private List<String> imageUrls;
+    private String created_at;
     private String sellerName;
     private String sellerMeta;
     private boolean isFavorite;      // 是否收藏
@@ -35,8 +37,10 @@ public class Product {
     public int getId() { return id; }
     public String getTitle() { return title; }
     public double getPrice() { return price; }
+    public String getCategory() {return category; }
     public String getDescription() { return description; }
     public List<String> getImageUrls() { return imageUrls; }
+    public String getCreated_at() { return created_at; }
     public String getSellerName() { return sellerName; }
     public String getSellerMeta() { return sellerMeta; }
     public boolean isFavorite() { return isFavorite; }
@@ -44,9 +48,16 @@ public class Product {
     // Setters
     public void setId(int id) { this.id = id; }
     public void setTitle(String title) { this.title = title; }
-    public void setPrice(double price) { this.price = price; }
+    public void setPrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Price cannot be negative");
+        }
+        this.price = price;
+    }
+    public void setCategory(String category) {this.category = category;}
     public void setDescription(String description) { this.description = description; }
     public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
+    public void setCreated_at(String created_at) { this.created_at = created_at; }
     public void setSellerName(String sellerName) { this.sellerName = sellerName; }
     public void setSellerMeta(String sellerMeta) { this.sellerMeta = sellerMeta; }
     public void setFavorite(boolean favorite) { isFavorite = favorite; }

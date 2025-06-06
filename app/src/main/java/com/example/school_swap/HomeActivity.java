@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.example.school_swap.network.HttpClient;
+
 public class HomeActivity extends AppCompatActivity {
     // 添加分类标签数组
     private TextView[] categoryTabs;
@@ -49,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
         productGrid.setLayoutManager(new GridLayoutManager(this, 2));
 
         // 设置适配器并添加点击监听
-        productAdapter = new ProductAdapter(getDummyProducts(), productId -> {
+        productAdapter = new ProductAdapter(getProducts(), productId -> {
             // 点击商品时跳转到详情页
             Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
             intent.putExtra("product_id", productId);
@@ -127,7 +129,7 @@ public class HomeActivity extends AppCompatActivity {
         List<Product> allProducts;
         switch (selectedTabIndex) {
             case 0: // 全部
-                allProducts = getDummyProducts();
+                allProducts = getProducts();
                 break;
             case 1: // 数码
                 allProducts = getDigitalProducts();
@@ -146,7 +148,7 @@ public class HomeActivity extends AppCompatActivity {
 //                break;
             // 其他分类...
             default:
-                allProducts = getDummyProducts();
+                allProducts = getProducts();
         }
 
         // 过滤商品
@@ -219,7 +221,7 @@ public class HomeActivity extends AppCompatActivity {
         List<Product> products = Collections.emptyList();
         switch (categoryIndex) {
             case 0: // 全部
-                products = getDummyProducts();
+                products = getProducts();
                 break;
             case 1: // 数码
                 products = getDigitalProducts();
@@ -238,7 +240,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             // 其他分类...
             default:
-                products = getDummyProducts();
+                products = getProducts();
         }
 
         // 更新RecyclerView
@@ -253,15 +255,15 @@ public class HomeActivity extends AppCompatActivity {
     // 添加不同分类的虚拟数据方法
     private List<Product> getDigitalProducts() {
         List<Product> products = new ArrayList<>();
-        products.add(new Product(1, "iPhone 12 128GB 白色 95新", 3999, "信息学院", "2分钟前"));
-        products.add(new Product(6, "华为Mate 40 Pro", 4999, "信息学院", "5分钟前"));
+//        products.add(new Product(1, "iPhone 12 128GB 白色 95新", 3999, "信息学院", "2分钟前"));
+//        products.add(new Product(6, "华为Mate 40 Pro", 4999, "信息学院", "5分钟前"));
         return products;
     }
 
     private List<Product> getBookProducts() {
         List<Product> products = new ArrayList<>();
-        products.add(new Product(2, "计算机网络教材 第7版", 20, "计算机学院", "5分钟前"));
-        products.add(new Product(7, "高等数学 上册", 15, "数学学院", "10分钟前"));
+//        products.add(new Product(2, "计算机网络教材 第7版", 20, "计算机学院", "5分钟前"));
+//        products.add(new Product(7, "高等数学 上册", 15, "数学学院", "10分钟前"));
         return products;
     }
 
@@ -270,14 +272,21 @@ public class HomeActivity extends AppCompatActivity {
         return productAdapter.productList;
     }
 
-    // 创建虚拟商品数据
-    private List<Product> getDummyProducts() {
+    // 获取商品数据
+    private List<Product> getProducts() {
         List<Product> products = new ArrayList<>();
-        products.add(new Product(1, "iPhone 12 128GB 白色 95新",3999, "信息学院", "2分钟前"));
-        products.add(new Product(2, "计算机网络教材 第7版", 20, "计算机学院", "5分钟前"));
-        products.add(new Product(3, "运动鞋", 200, "体育学院", "10分钟前"));
-        products.add(new Product(4, "运动裤",  100, "体育学院", "15分钟前"));
-        products.add(new Product(5, "运动袜",  50, "体育学院", "20分钟前"));
+        HttpClient.fetchProducts(1, 10, new HttpClient.ProductCallback() {
+            @Override
+            public void onSuccess(List<Product> products) {
+
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
+
         return products;
     }
 
@@ -328,8 +337,8 @@ public class HomeActivity extends AppCompatActivity {
             Product product = productList.get(position);
             holder.productTitle.setText(product.getTitle());
             holder.productPrice.setText("¥" + product.getPrice());
-            holder.productMeta.setText(product.getMeta());
-            holder.productTime.setText(product.getTime());
+//            holder.productMeta.setText(product.getMeta());
+            holder.productTime.setText(product.getCreated_at());
 
             // 设置点击事件
             holder.itemView.setOnClickListener(v -> {
@@ -359,41 +368,6 @@ public class HomeActivity extends AppCompatActivity {
                 productTime = itemView.findViewById(R.id.product_time);
                 productImage = itemView.findViewById(R.id.product_image);
             }
-        }
-    }
-
-    // 商品类
-    static class Product {
-        private final int id;
-        private final String title;
-        private final int price;
-        private final String meta;
-        private final String time;
-
-        Product(int id, String title, int price, String meta, String time) {
-            this.id = id;
-            this.title = title;
-            this.price = price;
-            this.meta = meta;
-            this.time = time;
-        }
-
-        public int getId() {return id;}
-
-        public String getTitle() {
-            return title;
-        }
-
-        public int getPrice() {
-            return price;
-        }
-
-        public String getMeta() {
-            return meta;
-        }
-
-        public String getTime() {
-            return time;
         }
     }
 
