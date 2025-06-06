@@ -1,7 +1,10 @@
 package com.example.school_swap;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.school_swap.network.HttpClient;
@@ -15,6 +18,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // 判断用户是否已经登陆
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+        if (!token.isEmpty()) {
+            navigateToMainActivity();
+        }
+
 
         // 初始化视图
         emailEditText = findViewById(R.id.emailEditText);
