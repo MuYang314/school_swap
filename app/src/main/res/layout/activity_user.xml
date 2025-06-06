@@ -343,6 +343,16 @@
                         android:src="@drawable/ic_arrow_right"
                         app:tint="#ccc" />
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/login_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_submit_bg"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/button_text_size"
+                    android:textStyle="bold"/>
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

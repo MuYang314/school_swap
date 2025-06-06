@@ -19,8 +19,8 @@ public class User {
         this.token = token;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getId() {
+        return id;
     }
 
     public String getNickname() {
@@ -41,6 +41,10 @@ public class User {
 
     public String getToken() {
         return token;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setNickname(String nickname) {

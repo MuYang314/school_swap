@@ -1,8 +1,12 @@
 package com.example.school_swap;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +21,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.example.school_swap.network.HttpClient;
+
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PublishProductActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE = 1001;
-    private EditText etProductName, etProductDesc, etProductPrice;
+    private EditText etProductName, etProductDesc, etProductPrice, etProductCount;
     private Spinner spinnerCategory;
     private RecyclerView rvProductImages;
     private List<Uri> imageUris = new ArrayList<>(); // 存储选择的图片路径
@@ -43,6 +51,7 @@ public class PublishProductActivity extends AppCompatActivity {
         etProductName = findViewById(R.id.et_product_name);
         etProductDesc = findViewById(R.id.et_product_desc);
         etProductPrice = findViewById(R.id.et_product_price);
+        etProductCount = findViewById(R.id.et_product_count);
         spinnerCategory = findViewById(R.id.spinner_category);
         rvProductImages = findViewById(R.id.rv_product_images);
     }
@@ -86,24 +95,45 @@ public class PublishProductActivity extends AppCompatActivity {
     }
 
     private void submitProduct() {
-        // 模拟数据封装和提交
+        // 数据封装和提交
         String productName = etProductName.getText().toString();
         String productDesc = etProductDesc.getText().toString();
         String category = spinnerCategory.getSelectedItem().toString();
         String price = etProductPrice.getText().toString();
+        String count = etProductCount.getText().toString();
 
-        Product product = new Product(
-                productName,
-                productDesc,
-                category,
-                price,
-                imageUris
-        );
+        Product product = new Product();
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        int user_id = sharedPreferences.getInt("user_id", 0);
 
-        Toast.makeText(this, "商品发布成功：" + productName, Toast.LENGTH_SHORT).show();
-        finish();
+        product.setOwner_id(user_id);
+        product.setTitle(productName);
+        product.setDescription(productDesc);
+        product.setCategory(category);
+        product.setPrice(Float.parseFloat(price));
+        product.setCount(Integer.parseInt(count));
+
+
+        HttpClient.publishProduct(this, product, imageUris, new HttpClient.ResponseCallback() {
+            @Override
+            public void onSuccess(String message) {
+
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
+
+        // 使用 runOnUiThread 方法确保 Toast 在主线程中显示
+//        runOnUiThread(() -> {
+            Toast.makeText(this, "商品发布成功：" + productName, Toast.LENGTH_SHORT).show();
+            finish();
+//        });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -208,22 +238,5 @@ public class PublishProductActivity extends AppCompatActivity {
             return position == imageUris.size() ? TYPE_ADD : TYPE_IMAGE;
         }
 
-    }
-
-    // 商品数据类（示例）
-    static class Product {
-        String name;
-        String description;
-        String category;
-        String price;
-        List<Uri> images;
-
-        Product(String name, String description, String category, String price, List<Uri> images) {
-            this.name = name;
-            this.description = description;
-            this.category = category;
-            this.price = price;
-            this.images = images;
-        }
     }
 }

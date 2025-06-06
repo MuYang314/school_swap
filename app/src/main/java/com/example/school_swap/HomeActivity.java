@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -26,8 +27,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -323,7 +324,7 @@ public class HomeActivity extends AppCompatActivity {
         public void onBindViewHolder(ProductViewHolder holder, int position) {
             Product product = productList.get(position);
             Picasso.get()
-                    .load("https://p26.toutiaoimg.com/origin/tos-cn-i-qvj2lq49k0/22f10850c5234b5285350743cfa16357")
+                    .load("http://192.168.198.76:8000/api/image/" + product.getImageUids().get(0))
                     .into(holder.productImage);
             holder.productTitle.setText(product.getTitle());
             holder.productPrice.setText("¥" + product.getPrice());
@@ -364,26 +365,55 @@ public class HomeActivity extends AppCompatActivity {
     // 格式化时间的方法
     private static String formatTime(String createdAt) {
         try {
-            // Parse the input date string
-            java.text.SimpleDateFormat inputFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault());
-            Date createdDate = inputFormat.parse(createdAt);
+            // 支持两种格式的解析：
+            // 1. 带毫秒和时区偏移的格式：2025-06-06T17:19:33.509498+00:00
+            // 2. 原始格式：2025-06-06T17:19:33+08:00
+            String[] possibleFormats = {
+                    "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX",  // 带微秒（实际会截断到毫秒）
+                    "yyyy-MM-dd'T'HH:mm:ssXXX"         // 原始格式
+            };
+
+            Date createdDate = null;
+            ParseException lastException = null;
+
+            // 尝试用多种格式解析
+            for (String format : possibleFormats) {
+                try {
+                    SimpleDateFormat inputFormat = new SimpleDateFormat(format, Locale.getDefault());
+                    inputFormat.setLenient(false); // 严格模式，避免错误解析
+                    createdDate = inputFormat.parse(createdAt);
+                    break; // 解析成功则跳出循环
+                } catch (ParseException e) {
+                    lastException = e;
+                }
+            }
+
+            if (createdDate == null) {
+                throw lastException != null ? lastException : new ParseException("无法解析日期: " + createdAt, 0);
+            }
+
             long createdTime = createdDate.getTime();
             long currentTime = System.currentTimeMillis();
             long diff = currentTime - createdTime;
 
             if (diff < 60 * 60 * 1000) { // 小于1小时
                 long minutes = diff / (60 * 1000);
-                return minutes + "分钟之前";
+                return minutes == 0 ? "刚刚" : minutes + "分钟前";
             } else if (diff < 24 * 60 * 60 * 1000) { // 小于24小时
                 long hours = diff / (60 * 60 * 1000);
-                return hours + "小时之前";
+                return hours + "小时前";
             } else {
-                java.text.SimpleDateFormat outputFormat = new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                 return outputFormat.format(createdDate);
             }
-        } catch (java.text.ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
-            return createdAt;
+            // 如果解析失败，尝试返回原始字符串的可读部分
+            try {
+                return createdAt.split("T")[0];
+            } catch (Exception ex) {
+                return createdAt;
+            }
         }
     }
 

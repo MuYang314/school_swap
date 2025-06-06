@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-import java.util.ArrayList;
+
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class ProductDetailActivity extends AppCompatActivity {
@@ -51,7 +53,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         Product product = loadProductData(productId);
 
         // 绑定轮播图
-        ImageAdapter imageAdapter = new ImageAdapter(product.getImageUrls());
+        ImageAdapter imageAdapter = new ImageAdapter(product.getImageUids());
         vpProductImages.setAdapter(imageAdapter);
 
         // 加载数据
@@ -62,7 +64,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvSellerMeta.setText(product.getSellerMeta());
 
         // 初始化指示器
-        initIndicators(product.getImageUrls().size());
+        initIndicators(product.getImageUids().size());
 
         // 监听页面变化更新指示器
         vpProductImages.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -112,7 +114,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         product.setTitle("iPhone 12 128GB 白色 95新");
         product.setPrice(3999.0);
         product.setDescription("2021年购入，无拆修无划痕，原装配件齐全，支持验货");
-        product.setImageUrls(List.of("url1", "url2", "url3")); // 实际替换为图片URL
+        product.setImageUids(List.of("url1", "url2", "url3")); // 实际替换为图片URL
         product.setSellerName("小明同学");
         product.setSellerMeta("信誉积分・100");
         return product;
@@ -148,10 +150,10 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-            // 加载图片（需使用Glide/Picasso等库）
-            // Glide.with(holder.itemView.getContext())
-            //     .load(imageUrls.get(position))
-            //     .into(holder.imageView);
+            // 加载图片
+            Picasso.get()
+                    .load(imageUrls.get(position))
+                    .into(holder.imageView);
         }
 
         @Override
