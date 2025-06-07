@@ -63,26 +63,28 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onProductLoaded(Product loadedProduct) {
                 // 更新UI数据
-                tvPrice.setText(loadedProduct.getFormattedPrice());
-                tvTitle.setText(loadedProduct.getTitle());
-                tvDescription.setText(loadedProduct.getDescription());
-                tvSellerName.setText(loadedProduct.getSellerName());
-                tvSellerMeta.setText(loadedProduct.getSellerMeta());
+                runOnUiThread(() -> {
+                    tvPrice.setText(loadedProduct.getFormattedPrice());
+                    tvTitle.setText(loadedProduct.getTitle());
+                    tvDescription.setText(loadedProduct.getDescription());
+                    tvSellerName.setText(loadedProduct.getSellerName());
+                    tvSellerMeta.setText(loadedProduct.getSellerMeta());
 
-                // 更新轮播图数据
-                ImageAdapter imageAdapter = new ImageAdapter(
-                        loadedProduct.getImageUids() != null ?
-                                loadedProduct.getImageUids() :
-                                new ArrayList<>()
-                );
-                // 确保适配器只被设置一次
-                if (vpProductImages.getAdapter() != null) {
-                    vpProductImages.setAdapter(null); // 移除旧的适配器
-                }
-                vpProductImages.setAdapter(imageAdapter);
+                    // 更新轮播图数据
+                    ImageAdapter imageAdapter = new ImageAdapter(
+                            loadedProduct.getImageUids() != null ?
+                                    loadedProduct.getImageUids() :
+                                    new ArrayList<>()
+                    );
+                    // 确保适配器只被设置一次
+                    if (vpProductImages.getAdapter() != null) {
+                        vpProductImages.setAdapter(null); // 移除旧的适配器
+                    }
+                    vpProductImages.setAdapter(imageAdapter);
 
-                // 初始化指示器
-                initIndicators(imageAdapter.getItemCount());
+                    // 初始化指示器
+                    initIndicators(imageAdapter.getItemCount());
+                });
             }
         });
 
@@ -139,7 +141,10 @@ public class ProductDetailActivity extends AppCompatActivity {
                 product.setSellerName(data.owner.nickname);
                 product.setSellerMeta("信誉积分・" + data.owner.credit_score);
 
-                callback.onProductLoaded(product);
+                // 确保在主线程中更新 UI
+                runOnUiThread(() -> {
+                    callback.onProductLoaded(product);
+                });
             }
 
             @Override
@@ -149,7 +154,6 @@ public class ProductDetailActivity extends AppCompatActivity {
                     Toast.makeText(ProductDetailActivity.this,
                             "加载失败: " + error, Toast.LENGTH_SHORT).show();
                 });
-
             }
         });
     }
