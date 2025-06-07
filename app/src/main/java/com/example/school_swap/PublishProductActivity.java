@@ -21,7 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.example.school_swap.network.HttpClient;
+import com.example.school_swap.network.ProductHttpClient;
+//import com.example.school_swap.network.HttpClient;
 
 import org.json.JSONException;
 
@@ -114,7 +115,7 @@ public class PublishProductActivity extends AppCompatActivity {
         product.setCount(Integer.parseInt(count));
 
 
-        HttpClient.publishProduct(this, product, imageUris, new HttpClient.ResponseCallback() {
+        ProductHttpClient.publishProduct(this, product, imageUris, new ProductHttpClient.ResponseCallback() {
             @Override
             public void onSuccess(String message) {
 

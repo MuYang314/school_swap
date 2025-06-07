@@ -7,8 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.example.school_swap.network.HttpClient;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.school_swap.network.AuthHttpClient;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText;
@@ -61,9 +62,9 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "登录中...", Toast.LENGTH_SHORT).show();
 
         // 调用登录API
-        HttpClient.login(email, password, new HttpClient.LoginCallback() {
+        AuthHttpClient.login(email, password, new AuthHttpClient.LoginCallback() {
             @Override
-            public void onSuccess(HttpClient.LoginResponse.UserData userData) {
+            public void onSuccess(AuthHttpClient.LoginResponse.UserData userData) {
                 runOnUiThread(() -> {
                     // 保存用户数据
                     saveUserData(userData);
@@ -89,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void saveUserData(HttpClient.LoginResponse.UserData userData) {
+    private void saveUserData(AuthHttpClient.LoginResponse.UserData userData) {
         // 使用SharedPreferences保存用户数据
         getSharedPreferences("user_prefs", MODE_PRIVATE)
             .edit()

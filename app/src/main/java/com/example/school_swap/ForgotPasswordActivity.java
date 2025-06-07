@@ -13,7 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.school_swap.network.HttpClient;
+import com.example.school_swap.network.AuthHttpClient;
+
 
 public class ForgotPasswordActivity extends AppCompatActivity {
     private EditText emailEditText;
@@ -55,7 +56,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private void onGetVerificationCode() {
         String email = emailEditText.getText().toString().trim();
-        
+
         // 验证邮箱
         if (TextUtils.isEmpty(email)) {
             emailEditText.setError("请输入邮箱");
@@ -72,7 +73,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         getVerificationCodeButton.setEnabled(false);
 
         // 请求验证码
-        HttpClient.getVerificationCode(email, new HttpClient.ResponseCallback() {
+        AuthHttpClient.getVerificationCode(email, new AuthHttpClient.ResponseCallback() {
             @Override
             public void onSuccess(String message) {
                 handler.post(() -> {
@@ -140,7 +141,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         resetButton.setEnabled(false);
 
         // 调用重置密码API
-        HttpClient.resetPassword(email, newPassword, confirmPassword, verificationCode, new HttpClient.ResponseCallback() {
+        AuthHttpClient.resetPassword(email, newPassword, confirmPassword, verificationCode, new AuthHttpClient.ResponseCallback() {
             @Override
             public void onSuccess(String message) {
                 handler.post(() -> {

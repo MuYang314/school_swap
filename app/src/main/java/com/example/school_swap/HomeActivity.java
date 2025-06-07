@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import com.example.school_swap.network.HttpClient;
+import com.example.school_swap.network.ProductHttpClient;
 import com.squareup.picasso.Picasso;
 
 public class HomeActivity extends AppCompatActivity {
@@ -256,7 +256,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // 获取商品数据
     private void getProducts() {
-        HttpClient.fetchProducts(1, 10, new HttpClient.ProductCallback() {
+        ProductHttpClient.fetchProducts(1, 10, new ProductHttpClient.ProductCallback() {
             @Override
             public void onSuccess(List<Product> products) {
                 allProducts.clear();

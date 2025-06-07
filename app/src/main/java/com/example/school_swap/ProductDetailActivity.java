@@ -14,7 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.school_swap.network.HttpClient;
+import com.example.school_swap.network.BaseHttpClient;
+import com.example.school_swap.network.ProductHttpClient;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -127,9 +128,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void loadProductData(int productId, ProductLoadCallback callback) {
-        HttpClient.productDetail(productId, new HttpClient.ProductDetailCallback() {
+        ProductHttpClient.productDetail(productId, new ProductHttpClient.ProductDetailCallback() {
             @Override
-            public void onSuccess(HttpClient.ProductDetailResponse.Data data) {
+            public void onSuccess(ProductHttpClient.ProductDetailResponse.Data data) {
                 Product product = new Product();
                 product.setTitle(data.title);
                 product.setPrice(data.price);
