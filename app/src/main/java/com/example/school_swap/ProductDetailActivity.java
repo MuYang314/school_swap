@@ -1,19 +1,23 @@
 package com.example.school_swap;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.school_swap.network.HttpClient;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDetailActivity extends AppCompatActivity {
@@ -49,22 +53,37 @@ public class ProductDetailActivity extends AppCompatActivity {
         // 接收商品ID
         int productId = getIntent().getIntExtra("product_id", 0);
 
-        // 加载模拟数据
-        Product product = loadProductData(productId);
+        // 先初始化空数据防止NPE
+        Product product = new Product();
+        product.setImageUids(new ArrayList<>()); // 初始化空列表
 
-        // 绑定轮播图
-        ImageAdapter imageAdapter = new ImageAdapter(product.getImageUids());
-        vpProductImages.setAdapter(imageAdapter);
+        // 加载真实数据
+        loadProductData(productId, new ProductLoadCallback() {
+            @Override
+            public void onProductLoaded(Product loadedProduct) {
+                // 更新UI数据
+                tvPrice.setText(loadedProduct.getFormattedPrice());
+                tvTitle.setText(loadedProduct.getTitle());
+                tvDescription.setText(loadedProduct.getDescription());
+                tvSellerName.setText(loadedProduct.getSellerName());
+                tvSellerMeta.setText(loadedProduct.getSellerMeta());
 
-        // 加载数据
-        tvPrice.setText(product.getFormattedPrice());
-        tvTitle.setText(product.getTitle());
-        tvDescription.setText(product.getDescription());
-        tvSellerName.setText(product.getSellerName());
-        tvSellerMeta.setText(product.getSellerMeta());
+                // 更新轮播图数据
+                ImageAdapter imageAdapter = new ImageAdapter(
+                        loadedProduct.getImageUids() != null ?
+                                loadedProduct.getImageUids() :
+                                new ArrayList<>()
+                );
+                // 确保适配器只被设置一次
+                if (vpProductImages.getAdapter() != null) {
+                    vpProductImages.setAdapter(null); // 移除旧的适配器
+                }
+                vpProductImages.setAdapter(imageAdapter);
 
-        // 初始化指示器
-        initIndicators(product.getImageUids().size());
+                // 初始化指示器
+                initIndicators(imageAdapter.getItemCount());
+            }
+        });
 
         // 监听页面变化更新指示器
         vpProductImages.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -107,17 +126,35 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
     }
 
-    private Product loadProductData(int productId) {
-        // 模拟数据
-        Product product = new Product();
-        product.setId(productId);
-        product.setTitle("iPhone 12 128GB 白色 95新");
-        product.setPrice(3999.0);
-        product.setDescription("2021年购入，无拆修无划痕，原装配件齐全，支持验货");
-        product.setImageUids(List.of("url1", "url2", "url3")); // 实际替换为图片URL
-        product.setSellerName("小明同学");
-        product.setSellerMeta("信誉积分・100");
-        return product;
+    private void loadProductData(int productId, ProductLoadCallback callback) {
+        HttpClient.productDetail(productId, new HttpClient.ProductDetailCallback() {
+            @Override
+            public void onSuccess(HttpClient.ProductDetailResponse.Data data) {
+                Product product = new Product();
+                product.setTitle(data.title);
+                product.setPrice(data.price);
+                product.setDescription(data.description);
+                product.setImageUids(data.images != null ? data.images : new ArrayList<>());
+                product.setSellerName(data.owner.nickname);
+                product.setSellerMeta("信誉积分・" + data.owner.credit_score);
+
+                callback.onProductLoaded(product);
+            }
+
+            @Override
+            public void onError(String error) {
+                // 错误处理
+                runOnUiThread(() -> {
+                            Toast.makeText(ProductDetailActivity.this,
+                                    "加载失败: " + error, Toast.LENGTH_SHORT).show();
+                });
+
+            }
+        });
+    }
+
+    interface ProductLoadCallback {
+        void onProductLoaded(Product product);
     }
 
     private void setupListeners() {
@@ -150,14 +187,18 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+            Log.d("imageUid", "uid: " + imageUrls.get(position));
             // 加载图片
             Picasso.get()
-                    .load(imageUrls.get(position))
+                    .load("http://192.168.198.76:8000/api/image/" + imageUrls.get(position))
                     .into(holder.imageView);
         }
 
         @Override
         public int getItemCount() {
+            if (imageUrls == null) {
+                return 0;
+            }
             return imageUrls.size();
         }
 

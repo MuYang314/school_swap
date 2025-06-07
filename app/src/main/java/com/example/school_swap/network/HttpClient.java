@@ -6,6 +6,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.example.school_swap.Product;
 import com.google.gson.Gson;
@@ -55,6 +58,30 @@ public class HttpClient {
         }
     }
 
+    public static  class ProductDetailResponse {
+        public int code;
+        public String message;
+        public Data data;
+        public static class Data {
+            public int id;
+            public String title;
+            public String description;
+            public String category;
+            public Double price;
+            public List<String> images;
+            public String status;
+            public String created_at;
+            public User owner;
+
+        }
+        public static class User {
+            public int id;
+            public String nickname;
+            public String avatar_url;
+            public int credit_score;
+        }
+    }
+
     public interface ResponseCallback {
         void onSuccess(String message);
         void onError(String error);
@@ -75,8 +102,8 @@ public class HttpClient {
         void onError(String error);
     }
 
-    public interface PublishProductCallback {
-        void onSuccess(Product product);
+    public interface ProductDetailCallback {
+        void onSuccess(ProductDetailResponse.Data response);
         void onError(String error);
     }
 
@@ -451,5 +478,43 @@ public class HttpClient {
                 callback.onError(errorMessage);
             }
         });
+    }
+
+    public static void productDetail(int productId, ProductDetailCallback callback) {
+        try {
+            String url = BASE_URL + "/api/goods/" + productId;
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    callback.onError("请求失败: " + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        String responseData = response.body().string();
+                        try {
+                            ProductDetailResponse productDetailResponse = gson.fromJson(responseData, ProductDetailResponse.class);
+                            if (productDetailResponse.code == 200) {
+                                callback.onSuccess(productDetailResponse.data);
+                            } else {
+                                callback.onError(productDetailResponse.message);
+                            }
+                        } catch (Exception e) {
+                            callback.onError("解析响应失败: " + e.getMessage());
+                        }
+                    } else {
+                        callback.onError("请求失败，状态码: " + response.code());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            callback.onError("请求构建失败: " + e.getMessage());
+        }
     }
 }
