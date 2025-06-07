@@ -1,5 +1,10 @@
 package com.example.school_swap.network;
 
+import android.util.Log;
+
+import com.example.school_swap.User;
+import com.google.gson.reflect.TypeToken;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
@@ -7,10 +12,12 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+
 import org.json.JSONObject;
 
 public class AuthHttpClient extends BaseHttpClient {
-    public static void login(String email, String password, LoginCallback callback) {
+    public static void login(String email, String password, LoginCallback<UserData> callback) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);
@@ -32,7 +39,8 @@ public class AuthHttpClient extends BaseHttpClient {
                 public void onResponse(Call call, Response response) throws IOException {
                     String responseData = response.body().string();
                     try {
-                        LoginResponse loginResponse = gson.fromJson(responseData, LoginResponse.class);
+                        Type type = new TypeToken<BaseResponse<UserData>>() {}.getType();
+                        BaseResponse<UserData> loginResponse = gson.fromJson(responseData, type);
                         if (loginResponse.code == 200) {
                             callback.onSuccess(loginResponse.data);
                         } else {
@@ -40,6 +48,7 @@ public class AuthHttpClient extends BaseHttpClient {
                         }
                     } catch (Exception e) {
                         callback.onError("解析响应失败: " + e.getMessage());
+                        Log.d("解析响应失败", e.getMessage().toString());
                     }
                 }
             });

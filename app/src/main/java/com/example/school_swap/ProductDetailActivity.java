@@ -128,9 +128,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void loadProductData(int productId, ProductLoadCallback callback) {
-        ProductHttpClient.productDetail(productId, new ProductHttpClient.ProductDetailCallback() {
+        ProductHttpClient.productDetail(productId, new ProductHttpClient.ProductDetailCallback<>() {
             @Override
-            public void onSuccess(ProductHttpClient.ProductDetailResponse.Data data) {
+            public void onSuccess(ProductHttpClient.ProductData data) {
                 Product product = new Product();
                 product.setTitle(data.title);
                 product.setPrice(data.price);
@@ -146,8 +146,8 @@ public class ProductDetailActivity extends AppCompatActivity {
             public void onError(String error) {
                 // 错误处理
                 runOnUiThread(() -> {
-                            Toast.makeText(ProductDetailActivity.this,
-                                    "加载失败: " + error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProductDetailActivity.this,
+                            "加载失败: " + error, Toast.LENGTH_SHORT).show();
                 });
 
             }

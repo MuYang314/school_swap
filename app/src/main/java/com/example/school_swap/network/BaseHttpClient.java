@@ -25,38 +25,36 @@ public class BaseHttpClient {
     protected static final Gson gson = new Gson();
     protected static final ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-    public static class LoginResponse {
+    // 通用响应基类
+    public static class BaseResponse<T> {
         public int code;
         public String message;
-        public UserData data;
-
-        public static class UserData {
-            public int id;
-            public String nickname;
-            public String email;
-            public String avatar_url;
-            public int credit_score;
-            public String token;
-        }
+        public T data;
     }
 
-    public static class ProductDetailResponse {
-        public int code;
-        public String message;
-        public Data data;
-        public static class Data {
-            public int id;
-            public String title;
-            public String description;
-            public String category;
-            public Double price;
-            public List<String> images;
-            public String status;
-            public String created_at;
-            public User owner;
+    // 用户数据结构
+    public static class UserData {
+        public int id;
+        public String nickname;
+        public String email;
+        public String avatar_url;
+        public int credit_score;
+        public String token;
+    }
 
-        }
-        public static class User {
+    // 商品数据结构
+    public static class ProductData {
+        public int id;
+        public String title;
+        public String description;
+        public String category;
+        public Double price;
+        public List<String> images;
+        public String status;
+        public String created_at;
+        public ProductOwner owner;
+
+        public static class ProductOwner {
             public int id;
             public String nickname;
             public String avatar_url;
@@ -64,13 +62,9 @@ public class BaseHttpClient {
         }
     }
 
-    public static class TaskDetailResponse {
-        public int code;
-        public String message;
-        public Data data;
-        public static class Data {
-
-        }
+    // 任务数据结构 (根据实际需求补充字段)
+    public static class TaskData {
+        // 添加实际需要的字段
     }
 
     public interface TaskCallback {
@@ -83,8 +77,8 @@ public class BaseHttpClient {
         void onError(String error);
     }
 
-    public interface LoginCallback {
-        void onSuccess(LoginResponse.UserData userData);
+    public interface LoginCallback<T> {
+        void onSuccess(T data);
         void onError(String error);
     }
 
@@ -98,8 +92,8 @@ public class BaseHttpClient {
         void onError(String error);
     }
 
-    public interface ProductDetailCallback {
-        void onSuccess(ProductDetailResponse.Data response);
+    public interface ProductDetailCallback<T> {
+        void onSuccess(T data);
         void onError(String error);
     }
 

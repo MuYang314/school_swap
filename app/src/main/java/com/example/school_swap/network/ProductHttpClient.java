@@ -3,6 +3,7 @@ package com.example.school_swap.network;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.school_swap.Product;
 import com.google.gson.reflect.TypeToken;
@@ -17,8 +18,10 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.json.JSONArray;
@@ -202,7 +205,7 @@ public class ProductHttpClient extends BaseHttpClient {
         });
     }
 
-    public static void productDetail(int productId, ProductDetailCallback callback) {
+    public static void productDetail(int productId, ProductDetailCallback<ProductData> callback) {
         try {
             String url = BASE_URL + "/api/goods/" + productId;
             Request request = new Request.Builder()
@@ -221,7 +224,8 @@ public class ProductHttpClient extends BaseHttpClient {
                     if (response.isSuccessful()) {
                         String responseData = response.body().string();
                         try {
-                            ProductDetailResponse productDetailResponse = gson.fromJson(responseData, ProductDetailResponse.class);
+                            Type type = new TypeToken<BaseResponse<ProductData>>() {}.getType();
+                            BaseResponse<ProductData> productDetailResponse = gson.fromJson(responseData, type);
                             if (productDetailResponse.code == 200) {
                                 callback.onSuccess(productDetailResponse.data);
                             } else {
@@ -229,6 +233,7 @@ public class ProductHttpClient extends BaseHttpClient {
                             }
                         } catch (Exception e) {
                             callback.onError("解析响应失败: " + e.getMessage());
+                            Log.d("productDetail解析响应失败", Objects.requireNonNull(e.getMessage()));
                         }
                     } else {
                         callback.onError("请求失败，状态码: " + response.code());

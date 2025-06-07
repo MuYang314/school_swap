@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.school_swap.network.AuthHttpClient;
+import com.example.school_swap.network.BaseHttpClient;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText;
@@ -62,19 +63,19 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "登录中...", Toast.LENGTH_SHORT).show();
 
         // 调用登录API
-        AuthHttpClient.login(email, password, new AuthHttpClient.LoginCallback() {
+        AuthHttpClient.login(email, password, new AuthHttpClient.LoginCallback<>() {
             @Override
-            public void onSuccess(AuthHttpClient.LoginResponse.UserData userData) {
+            public void onSuccess(AuthHttpClient.UserData userData) {
                 runOnUiThread(() -> {
                     // 保存用户数据
                     saveUserData(userData);
-                    
+
                     // 显示成功消息
                     Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                    
+
                     // 跳转到主页
                     navigateToMainActivity();
-                    
+
                     // 关闭当前页面
                     finish();
                 });
@@ -90,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void saveUserData(AuthHttpClient.LoginResponse.UserData userData) {
+    private void saveUserData(AuthHttpClient.UserData userData) {
         // 使用SharedPreferences保存用户数据
         getSharedPreferences("user_prefs", MODE_PRIVATE)
             .edit()
