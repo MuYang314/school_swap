@@ -1,5 +1,7 @@
 package com.example.school_swap;
 
+import android.os.Build;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -84,9 +86,14 @@ public class Task implements Serializable {
         if (deadline != null && !deadline.isEmpty()) {
             try {
                 // 使用 ZonedDateTime 解析 ISO 格式的时间字符串
-                ZonedDateTime zonedDateTime = ZonedDateTime.parse(deadline, DateTimeFormatter.ISO_DATE_TIME);
+                ZonedDateTime zonedDateTime = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    zonedDateTime = ZonedDateTime.parse(deadline, DateTimeFormatter.ISO_DATE_TIME);
+                }
                 // 转换为 Date 对象
-                deadlineDate = Date.from(zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toInstant());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    deadlineDate = Date.from(zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toInstant());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
