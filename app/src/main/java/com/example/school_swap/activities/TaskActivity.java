@@ -1,5 +1,6 @@
 package com.example.school_swap.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -43,6 +45,13 @@ public class TaskActivity extends AppCompatActivity {
     private Runnable searchRunnable;
     private static final int SEARCH_DELAY = 300; // 防抖延迟300毫秒
     private List<Task> allTasks = new ArrayList<>();
+    // 添加分页相关变量
+    private int currentPage = 1;
+    private int totalPage = 1;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
+    private LinearLayoutManager layoutManager;
+//    private ProgressBar loadingProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +61,29 @@ public class TaskActivity extends AppCompatActivity {
 
         // 初始化RecyclerView
         taskList = findViewById(R.id.task_list);
-        taskList.setLayoutManager(new LinearLayoutManager(this));
+        layoutManager = new LinearLayoutManager(this);
+        taskList.setLayoutManager(layoutManager);
+
+        // 添加滚动监听
+        taskList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                // 检测是否滑动到底部
+                if (!isLoading && !isLastPage && dy > 0) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 3
+                            && totalItemCount >= 5) {
+                        loadMoreTasks();
+                    }
+                }
+            }
+        });
+
         // 设置适配器并添加点击监听
         taskAdapter = new TaskAdapter(allTasks, taskId -> {
             // 点击任务时跳转到详情页
@@ -82,18 +113,46 @@ public class TaskActivity extends AppCompatActivity {
         initSearchView();
 
         // 获取任务数据
-        fetchTasks();
+        fetchTasks(1);
     }
 
-    private void fetchTasks() {
-        TaskHttpClient.fetchTask(1, 10, new BaseHttpClient.ApiCallback<BaseHttpClient.PaginatedResponse<BaseHttpClient.TaskData>>() {
+    private void fetchTasks(int page) {
+        if (isLoading || page - 1 == totalPage) return;
+
+        isLoading = true;
+        TaskHttpClient.fetchTask(page, 10, new BaseHttpClient.ApiCallback<BaseHttpClient.PaginatedResponse<BaseHttpClient.TaskData>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onSuccess(BaseHttpClient.PaginatedResponse<BaseHttpClient.TaskData> data) {
+                isLoading = false;
+//                loadingProgress.setVisibility(View.GONE);
+
                 runOnUiThread(() -> {
-                    allTasks.clear();
-                    // 转换数据
-                    allTasks.addAll(convertToTaskList(data.list));
-                    taskAdapter.notifyDataSetChanged();
+                    if (page == 1) {
+                        totalPage = data.pages;
+                        // 如果是第一页，清空原有数据
+                        allTasks.clear();
+                    }
+
+                    List<Task> newTasks = convertToTaskList(data.list);
+                    allTasks.addAll(newTasks);
+
+                    // 更新适配器
+                    if (taskAdapter == null) {
+                        taskAdapter = new TaskAdapter(allTasks, taskId -> {
+                            Intent intent = new Intent(TaskActivity.this, TaskDetailActivity.class);
+                            intent.putExtra("task_id", taskId);
+                            startActivity(intent);
+                        });
+                        taskList.setAdapter(taskAdapter);
+                    } else {
+                        taskAdapter.notifyDataSetChanged();
+                    }
+
+                    // 更新分页状态
+                    currentPage = page;
+                    isLastPage = data.pages <= page;
+
                     // 加载默认分类数据
                     loadCategoryData(selectedTabIndex);
                 });
@@ -101,8 +160,11 @@ public class TaskActivity extends AppCompatActivity {
 
             @Override
             public void onError(String error) {
+                isLoading = false;
                 runOnUiThread(() -> {
                     // 处理错误
+                    Toast.makeText(TaskActivity.this,
+                            "加载失败: " + error, Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -167,6 +229,10 @@ public class TaskActivity extends AppCompatActivity {
 
     // 根据关键词过滤任务
     private void filterTasks(String keyword) {
+        // 重置分页状态
+        currentPage = 1;
+        isLastPage = false;
+
         if (keyword.isEmpty()) {
             // 如果搜索框为空，显示当前分类的任务
             loadCategoryData(selectedTabIndex);
@@ -245,6 +311,10 @@ public class TaskActivity extends AppCompatActivity {
 
     // 加载分类数据
     private void loadCategoryData(int categoryIndex) {
+        // 重置分页状态
+        currentPage = 1;
+        isLastPage = false;
+
         List<Task> tasks;
         switch (categoryIndex) {
             case 0: // 全部
@@ -283,6 +353,13 @@ public class TaskActivity extends AppCompatActivity {
             }
         }
         return filteredTasks;
+    }
+
+    // 加载更多任务
+    private void loadMoreTasks() {
+        if (!isLoading && !isLastPage) {
+            fetchTasks(currentPage + 1);
+        }
     }
 
     // 任务适配器

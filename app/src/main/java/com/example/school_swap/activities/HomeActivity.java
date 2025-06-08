@@ -51,6 +51,12 @@ public class HomeActivity extends AppCompatActivity {
     private Runnable searchRunnable;
     private static final int SEARCH_DELAY = 300; // 防抖延迟300毫秒
     private List<Product> allProducts = new ArrayList<>();
+    // 添加分页相关变量
+    private int currentPage = 1;
+    private int totalPage = 1;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
+    private GridLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +66,28 @@ public class HomeActivity extends AppCompatActivity {
 
         // 初始化RecyclerView
         productGrid = findViewById(R.id.product_grid);
-        productGrid.setLayoutManager(new GridLayoutManager(this, 2));
+        layoutManager = new GridLayoutManager(this, 2);
+        productGrid.setLayoutManager(layoutManager);
+
+        // 添加滚动监听
+        productGrid.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                // 检测是否滑动到底部
+                if (!isLoading && !isLastPage) {
+                    if ((visibleItemCount + firstVisibleItemPosition + 5) >= totalItemCount
+                            && dy > 0) { // 提前5个item触发加载，且只在向下滚动时加载
+                        loadMoreProducts();
+                    }
+                }
+            }
+        });
 
         // 初始化商品适配器
         productAdapter = new ProductAdapter(allProducts, productId -> {
@@ -91,7 +118,8 @@ public class HomeActivity extends AppCompatActivity {
         initSearchView();
 
         // 获取商品数据
-        getProducts();
+        // 初始加载第一页
+        getProducts(1);
 
         SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         int id = sharedPreferences.getInt("user_id", 0);
@@ -144,6 +172,9 @@ public class HomeActivity extends AppCompatActivity {
 
     // 根据关键词过滤商品
     private void filterProducts(String keyword) {
+        // 重置分页状态
+        currentPage = 1;
+        isLastPage = false;
         if (keyword.isEmpty()) {
             // 如果搜索框为空，显示当前分类的商品
             loadCategoryData(selectedTabIndex);
@@ -215,6 +246,9 @@ public class HomeActivity extends AppCompatActivity {
 
     // 加载分类数据
     private void loadCategoryData(int categoryIndex) {
+        // 重置分页状态
+        currentPage = 1;
+        isLastPage = false;
         List<Product> products = new ArrayList<>();
         switch (categoryIndex) {
             case 0: // 全部
@@ -259,33 +293,61 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     // 获取商品数据
-    private void getProducts() {
-        ProductHttpClient.fetchProducts(1, 10, new BaseHttpClient.ApiCallback<>() {
+    // 修改getProducts方法支持分页
+    private void getProducts(int page) {
+        if (isLoading || page - 1 == totalPage) return; // 防止重复加载
+        isLoading = true;
+        ProductHttpClient.fetchProducts(page, 10, new BaseHttpClient.ApiCallback<>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onSuccess(BaseHttpClient.PaginatedResponse<BaseHttpClient.ProductData> data) {
                 runOnUiThread(() -> {
-                    allProducts.clear();
-                    // 从 response.data.goods 获取商品列表
-                    allProducts.addAll(convertToProductList(data.list));
-                    productAdapter = new ProductAdapter(allProducts, productId -> {
-                        Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
-                        intent.putExtra("product_id", productId);
-                        startActivity(intent);
-                    });
-                    productGrid.setAdapter(productAdapter);
+                    isLoading = false;
+                    if (page == 1) {
+                        totalPage = data.pages;
+                        // 如果是第一页，清空原有数据
+                        allProducts.clear();
+                    }
 
-                    // 可以在这里更新分页信息（如果需要）
-                    int totalItems = data.total;
-                    int totalPages = data.pages;
-                    int currentPage = data.current_page;
+                    List<Product> newProducts = convertToProductList(data.list);
+                    allProducts.addAll(newProducts);
+
+                    // 更新适配器
+                    if (productAdapter == null) {
+                        productAdapter = new ProductAdapter(allProducts, productId -> {
+                            Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
+                            intent.putExtra("product_id", productId);
+                            startActivity(intent);
+                        });
+                        productGrid.setAdapter(productAdapter);
+                    } else {
+                        productAdapter.notifyDataSetChanged();
+                    }
+
+                    // 更新分页状态
+                    currentPage = page;
+                    isLastPage = data.pages <= page;
+                    // 确保正确更新分页状态
+                    Log.d("Pagination", "Loaded page: " + page + ", total pages: " + data.pages);
                 });
             }
             @Override
             public void onError(String error) {
-                runOnUiThread(() -> Toast.makeText(HomeActivity.this,
-                        "获取商品失败: " + error, Toast.LENGTH_SHORT).show());
+                isLoading = false;
+
+                runOnUiThread(() -> {
+                    runOnUiThread(() -> Toast.makeText(HomeActivity.this,
+                            "获取商品失败: " + error, Toast.LENGTH_SHORT).show());
+                });
             }
         });
+    }
+
+    // 加载更多商品
+    private void loadMoreProducts() {
+        if (!isLoading && !isLastPage) {
+            getProducts(currentPage + 1);
+        }
     }
 
     // 转换方法（可选）
