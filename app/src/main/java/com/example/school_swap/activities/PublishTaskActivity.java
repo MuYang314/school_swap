@@ -1,7 +1,10 @@
 package com.example.school_swap.activities;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,6 +14,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.school_swap.R;
+import com.example.school_swap.models.Task;
+import com.example.school_swap.network.BaseHttpClient;
+import com.example.school_swap.network.TaskHttpClient;
 
 import java.util.Calendar;
 
@@ -55,7 +61,7 @@ public class PublishTaskActivity extends AppCompatActivity {
                         TimePickerDialog timePicker = new TimePickerDialog(
                                 PublishTaskActivity.this,
                                 (view1, hourOfDay, minute) -> {
-                                    String deadline = String.format("%d-%d-%d %d:%d",
+                                    @SuppressLint("DefaultLocale") String deadline = String.format("%d-%d-%d %d:%d",
                                             year, month+1, dayOfMonth, hourOfDay, minute);
                                     etDeadline.setText(deadline);
                                 },
@@ -103,34 +109,26 @@ public class PublishTaskActivity extends AppCompatActivity {
         String taskDesc = etTaskDesc.getText().toString();
         String taskType = spinnerTaskType.getSelectedItem().toString();
         String deadline = etDeadline.getText().toString();
-        String reward = etTaskReward.getText().toString();
+        Double reward = Double.valueOf(etTaskReward.getText().toString());
 
-        Task task = new Task(
-                taskTitle,
-                taskDesc,
-                taskType,
-                deadline,
-                reward
-        );
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        int user_id = sharedPreferences.getInt("user_id", 0);
 
-        Toast.makeText(this, "任务发布成功：" + taskTitle, Toast.LENGTH_SHORT).show();
-        finish();
-    }
+        Task task = new Task(user_id, taskTitle, taskType, taskDesc, reward, deadline);
 
-    // 任务数据类（示例）
-    static class Task {
-        String title;
-        String description;
-        String type;
-        String deadline;
-        String reward;
+        TaskHttpClient.publishTask(this, task, new BaseHttpClient.ApiCallback<>() {
+            @Override
+            public void onSuccess(String data) {
+                runOnUiThread(() -> {
+                    Toast.makeText(PublishTaskActivity.this, "任务发布成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            }
 
-        Task(String title, String description, String type, String deadline, String reward) {
-            this.title = title;
-            this.description = description;
-            this.type = type;
-            this.deadline = deadline;
-            this.reward = reward;
-        }
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 }
