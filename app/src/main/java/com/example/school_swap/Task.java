@@ -1,8 +1,10 @@
 package com.example.school_swap;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
@@ -81,15 +83,11 @@ public class Task implements Serializable {
     private void parseDeadline() {
         if (deadline != null && !deadline.isEmpty()) {
             try {
-                // 支持两种常见日期格式
-                SimpleDateFormat sdf;
-                if (deadline.contains(":")) {
-                    sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
-                } else {
-                    sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-                }
-                deadlineDate = sdf.parse(deadline);
-            } catch (ParseException e) {
+                // 使用 ZonedDateTime 解析 ISO 格式的时间字符串
+                ZonedDateTime zonedDateTime = ZonedDateTime.parse(deadline, DateTimeFormatter.ISO_DATE_TIME);
+                // 转换为 Date 对象
+                deadlineDate = Date.from(zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toInstant());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
