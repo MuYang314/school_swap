@@ -16,7 +16,7 @@ public class Task implements Serializable {
     private double price;           // 使用double更精确
     private String deadline;        // 字符串格式日期
     private Date deadlineDate;      // 解析后的日期对象
-    private String publisherId;     // 发布者ID
+    private int publisherId;     // 发布者ID
     private String publisherName;   // 发布者姓名
     private String publisherAvatar; // 发布者头像
     private int status;             // 任务状态：0-待接单 1-已接单 2-已完成 3-已取消
@@ -30,14 +30,14 @@ public class Task implements Serializable {
     public Task() {}
 
     // 主要信息构造方法
-    public Task(int id, String title, String category, String description,
+    public Task(int publisherId, String title, String category, String description,
                 double price, String deadline) {
-        this.id = id;
         this.title = title;
         this.category = category;
         this.description = description;
         this.price = price;
         this.deadline = deadline;
+        this.publisherId = publisherId;
         parseDeadline(); // 解析日期
     }
 
@@ -49,7 +49,7 @@ public class Task implements Serializable {
     public double getPrice() { return price; }
     public String getDeadline() { return deadline; }
     public Date getDeadlineDate() { return deadlineDate; }
-    public String getPublisherId() { return publisherId; }
+    public int getPublisherId() { return publisherId; }
     public String getPublisherName() { return publisherName; }
     public String getPublisherAvatar() { return publisherAvatar; }
     public int getStatus() { return status; }
@@ -69,7 +69,7 @@ public class Task implements Serializable {
         this.deadline = deadline;
         parseDeadline();
     }
-    public void setPublisherId(String publisherId) { this.publisherId = publisherId; }
+    public void setPublisherId(int publisherId) { this.publisherId = publisherId; }
     public void setPublisherName(String publisherName) { this.publisherName = publisherName; }
     public void setPublisherAvatar(String publisherAvatar) { this.publisherAvatar = publisherAvatar; }
     public void setStatus(int status) { this.status = status; }
