@@ -264,7 +264,7 @@ public class HomeActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     allProducts.clear();
                     // 从 response.data.goods 获取商品列表
-                    allProducts.addAll(convertToProductList(data.goods));
+                    allProducts.addAll(convertToProductList(data.list));
                     productAdapter = new ProductAdapter(allProducts, productId -> {
                         Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
                         intent.putExtra("product_id", productId);

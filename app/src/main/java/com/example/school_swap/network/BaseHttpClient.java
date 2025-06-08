@@ -27,7 +27,7 @@ public class BaseHttpClient {
 
     // 分页类
     public static class PaginatedResponse<T> {
-        public List<T> goods;  // 商品列表
+        public List<T> list;
         public int total;      // 总条目数
         public int pages;      // 总页数
         public int current_page; // 当前页
@@ -61,14 +61,7 @@ public class BaseHttpClient {
         public List<String> images;
         public String status;
         public String created_at;
-        public ProductOwner owner;
-
-        public static class ProductOwner {
-            public int id;
-            public String nickname;
-            public String avatar_url;
-            public int credit_score;
-        }
+        public UserData owner;
     }
 
     // 任务数据结构
