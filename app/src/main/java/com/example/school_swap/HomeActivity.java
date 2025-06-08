@@ -258,21 +258,30 @@ public class HomeActivity extends AppCompatActivity {
 
     // 获取商品数据
     private void getProducts() {
-        ProductHttpClient.fetchProducts(1, 10, new ProductHttpClient.ProductCallback<>() {
+        ProductHttpClient.fetchProducts(1, 10, new BaseHttpClient.ApiCallback<>() {
             @Override
-            public void onSuccess(List<ProductHttpClient.ProductData> products) {
-                runOnUiThread(() -> {
-                    allProducts.clear();
-                    allProducts.addAll(convertToProductList(products));
-                    productAdapter = new ProductAdapter(allProducts, productId -> {
-                        Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
-                        intent.putExtra("product_id", productId);
-                        startActivity(intent);
-                    });
-                    productGrid.setAdapter(productAdapter);
-                });
-            }
+            public void onSuccess(BaseHttpClient.BaseResponse<BaseHttpClient.PaginatedResponse<BaseHttpClient.ProductData>> response) {
+                if (response.code == 200) {
+                    runOnUiThread(() -> {
+                        allProducts.clear();
+                        // 从 response.data.goods 获取商品列表
+                        allProducts.addAll(convertToProductList(response.data.goods));
+                        productAdapter = new ProductAdapter(allProducts, productId -> {
+                            Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
+                            intent.putExtra("product_id", productId);
+                            startActivity(intent);
+                        });
+                        productGrid.setAdapter(productAdapter);
 
+                        // 可以在这里更新分页信息（如果需要）
+                        int totalItems = response.data.total;
+                        int totalPages = response.data.pages;
+                        int currentPage = response.data.current_page;
+                    });
+                } else {
+                    runOnUiThread(() -> Toast.makeText(HomeActivity.this, "获取商品失败: " + response.message, Toast.LENGTH_SHORT).show());
+                }
+            }
             @Override
             public void onError(String error) {
                 runOnUiThread(() -> Toast.makeText(HomeActivity.this,

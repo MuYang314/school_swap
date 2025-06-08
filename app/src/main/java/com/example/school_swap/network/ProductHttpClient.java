@@ -29,7 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ProductHttpClient extends BaseHttpClient {
-    public static void fetchProducts(int page, int pageSize, ProductCallback<List<ProductData>> callback) {
+    public static void fetchProducts(int page, int pageSize, ApiCallback<PaginatedResponse<ProductData>> callback) {
         try {
             String url = BASE_URL + "/api/goods/list?page=" + page + "&page_size=" + pageSize;
             Request request = new Request.Builder()
@@ -47,15 +47,9 @@ public class ProductHttpClient extends BaseHttpClient {
                 public void onResponse(Call call, Response response) throws IOException {
                     String responseData = response.body().string();
                     try {
-                        Type type = new TypeToken<BaseResponse<List<ProductData>>>() {}.getType();
-                        BaseResponse<List<ProductData>> productResponse = gson.fromJson(responseData, type);
-
-                        if (productResponse.code == 200) {
-                            callback.onSuccess(productResponse.data);
-                            Log.d("data", productResponse.data.toString());
-                        } else {
-                            callback.onError(productResponse.message);
-                        }
+                        Type type = new TypeToken<BaseResponse<PaginatedResponse<ProductData>>>() {}.getType();
+                        BaseResponse<PaginatedResponse<ProductData>> productResponse = gson.fromJson(responseData, type);
+                        callback.onSuccess(productResponse);
                     } catch (Exception e) {
                         callback.onError("解析响应失败: " + e.getMessage());
                         Log.d("Home解析响应失败", e.getMessage().toString());

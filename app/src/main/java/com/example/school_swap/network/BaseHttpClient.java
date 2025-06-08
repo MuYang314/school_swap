@@ -25,6 +25,14 @@ public class BaseHttpClient {
     protected static final Gson gson = new Gson();
     protected static final ExecutorService executorService = Executors.newFixedThreadPool(3);
 
+
+    public static class PaginatedResponse<T> {
+        public List<T> goods;  // 商品列表
+        public int total;      // 总条目数
+        public int pages;      // 总页数
+        public int current_page; // 当前页
+    }
+
     // 通用响应基类
     public static class BaseResponse<T> {
         public int code;
