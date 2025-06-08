@@ -63,21 +63,24 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "登录中...", Toast.LENGTH_SHORT).show();
 
         // 调用登录API
-        AuthHttpClient.login(email, password, new AuthHttpClient.LoginCallback<>() {
+        AuthHttpClient.login(email, password, new AuthHttpClient.ApiCallback<>() {
             @Override
-            public void onSuccess(AuthHttpClient.UserData userData) {
+            public void onSuccess(BaseHttpClient.BaseResponse<AuthHttpClient.UserData> response) {
                 runOnUiThread(() -> {
-                    // 保存用户数据
-                    saveUserData(userData);
-
-                    // 显示成功消息
-                    Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-
-                    // 跳转到主页
-                    navigateToMainActivity();
-
-                    // 关闭当前页面
-                    finish();
+                    if (response.code == 200) {
+                        // 保存用户数据
+                        saveUserData(response.data);
+                        // 显示成功消息
+                        Toast.makeText(LoginActivity.this, "登录成功",
+                                Toast.LENGTH_SHORT).show();
+                        // 跳转到主页
+                        navigateToMainActivity();
+                        // 关闭当前页面
+                        finish();
+                    } else {
+                        Toast.makeText(LoginActivity.this, response.message,
+                                Toast.LENGTH_SHORT).show();
+                    }
                 });
             }
 

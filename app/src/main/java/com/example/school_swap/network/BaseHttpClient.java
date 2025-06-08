@@ -74,6 +74,11 @@ public class BaseHttpClient {
         public UserData publisher;
     }
 
+    public interface ApiCallback<T> {
+        void onSuccess(BaseResponse<T> response);
+        void onError(String error);
+    }
+
     public interface TaskCallback {
         void onSuccess(List<Task> tasks);
         void onError(String error);

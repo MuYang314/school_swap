@@ -17,7 +17,7 @@ import java.lang.reflect.Type;
 import org.json.JSONObject;
 
 public class AuthHttpClient extends BaseHttpClient {
-    public static void login(String email, String password, LoginCallback<UserData> callback) {
+    public static void login(String email, String password, ApiCallback<UserData> callback) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);
@@ -41,11 +41,7 @@ public class AuthHttpClient extends BaseHttpClient {
                     try {
                         Type type = new TypeToken<BaseResponse<UserData>>() {}.getType();
                         BaseResponse<UserData> loginResponse = gson.fromJson(responseData, type);
-                        if (loginResponse.code == 200) {
-                            callback.onSuccess(loginResponse.data);
-                        } else {
-                            callback.onError(loginResponse.message);
-                        }
+                        callback.onSuccess(loginResponse);
                     } catch (Exception e) {
                         callback.onError("解析响应失败: " + e.getMessage());
                         Log.d("解析响应失败", e.getMessage().toString());
