@@ -19,6 +19,7 @@ public class Task implements Serializable {
     private int publisherId;     // 发布者ID
     private String publisherName;   // 发布者姓名
     private String publisherAvatar; // 发布者头像
+    private String publisherMeta;
     private int status;             // 任务状态：0-待接单 1-已接单 2-已完成 3-已取消
     private boolean isUrgent;       // 是否加急任务
     private String location;        // 任务地点
@@ -52,6 +53,7 @@ public class Task implements Serializable {
     public int getPublisherId() { return publisherId; }
     public String getPublisherName() { return publisherName; }
     public String getPublisherAvatar() { return publisherAvatar; }
+    public String getPublisherMeta() { return publisherMeta; }
     public int getStatus() { return status; }
     public boolean isUrgent() { return isUrgent; }
     public String getLocation() { return location; }
@@ -72,6 +74,7 @@ public class Task implements Serializable {
     public void setPublisherId(int publisherId) { this.publisherId = publisherId; }
     public void setPublisherName(String publisherName) { this.publisherName = publisherName; }
     public void setPublisherAvatar(String publisherAvatar) { this.publisherAvatar = publisherAvatar; }
+    public void setPublisherMeta(String publisherMeta) { this.publisherMeta = publisherMeta; }
     public void setStatus(int status) { this.status = status; }
     public void setUrgent(boolean urgent) { isUrgent = urgent; }
     public void setLocation(String location) { this.location = location; }
