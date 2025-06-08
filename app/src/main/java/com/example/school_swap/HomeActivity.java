@@ -260,27 +260,23 @@ public class HomeActivity extends AppCompatActivity {
     private void getProducts() {
         ProductHttpClient.fetchProducts(1, 10, new BaseHttpClient.ApiCallback<>() {
             @Override
-            public void onSuccess(BaseHttpClient.BaseResponse<BaseHttpClient.PaginatedResponse<BaseHttpClient.ProductData>> response) {
-                if (response.code == 200) {
-                    runOnUiThread(() -> {
-                        allProducts.clear();
-                        // 从 response.data.goods 获取商品列表
-                        allProducts.addAll(convertToProductList(response.data.goods));
-                        productAdapter = new ProductAdapter(allProducts, productId -> {
-                            Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
-                            intent.putExtra("product_id", productId);
-                            startActivity(intent);
-                        });
-                        productGrid.setAdapter(productAdapter);
-
-                        // 可以在这里更新分页信息（如果需要）
-                        int totalItems = response.data.total;
-                        int totalPages = response.data.pages;
-                        int currentPage = response.data.current_page;
+            public void onSuccess(BaseHttpClient.PaginatedResponse<BaseHttpClient.ProductData> data) {
+                runOnUiThread(() -> {
+                    allProducts.clear();
+                    // 从 response.data.goods 获取商品列表
+                    allProducts.addAll(convertToProductList(data.goods));
+                    productAdapter = new ProductAdapter(allProducts, productId -> {
+                        Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
+                        intent.putExtra("product_id", productId);
+                        startActivity(intent);
                     });
-                } else {
-                    runOnUiThread(() -> Toast.makeText(HomeActivity.this, "获取商品失败: " + response.message, Toast.LENGTH_SHORT).show());
-                }
+                    productGrid.setAdapter(productAdapter);
+
+                    // 可以在这里更新分页信息（如果需要）
+                    int totalItems = data.total;
+                    int totalPages = data.pages;
+                    int currentPage = data.current_page;
+                });
             }
             @Override
             public void onError(String error) {

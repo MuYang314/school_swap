@@ -49,7 +49,11 @@ public class ProductHttpClient extends BaseHttpClient {
                     try {
                         Type type = new TypeToken<BaseResponse<PaginatedResponse<ProductData>>>() {}.getType();
                         BaseResponse<PaginatedResponse<ProductData>> productResponse = gson.fromJson(responseData, type);
-                        callback.onSuccess(productResponse);
+                        if (productResponse.code == 200) {
+                            callback.onSuccess(productResponse.data);
+                        } else {
+                            callback.onError(productResponse.message);
+                        }
                     } catch (Exception e) {
                         callback.onError("解析响应失败: " + e.getMessage());
                         Log.d("Home解析响应失败", e.getMessage().toString());

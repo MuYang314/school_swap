@@ -41,7 +41,11 @@ public class AuthHttpClient extends BaseHttpClient {
                     try {
                         Type type = new TypeToken<BaseResponse<UserData>>() {}.getType();
                         BaseResponse<UserData> loginResponse = gson.fromJson(responseData, type);
-                        callback.onSuccess(loginResponse);
+                        if (loginResponse.code == 200) {
+                            callback.onSuccess(loginResponse.data);
+                        } else {
+                            callback.onError(loginResponse.message);
+                        }
                     } catch (Exception e) {
                         callback.onError("解析响应失败: " + e.getMessage());
                         Log.d("解析响应失败", e.getMessage().toString());

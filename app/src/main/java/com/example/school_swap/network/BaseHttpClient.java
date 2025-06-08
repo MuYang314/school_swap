@@ -83,7 +83,7 @@ public class BaseHttpClient {
     }
 
     public interface ApiCallback<T> {
-        void onSuccess(BaseResponse<T> response);
+        void onSuccess(T data);
         void onError(String error);
     }
 
