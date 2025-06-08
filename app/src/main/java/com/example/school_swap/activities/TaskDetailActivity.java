@@ -15,7 +15,8 @@ import com.example.school_swap.network.TaskHttpClient;
 
 public class TaskDetailActivity extends AppCompatActivity {
 
-    private TextView tvCategory, tvTitle, tvDescription, tvPrice, tvDeadline;
+    private TextView tvCategory, tvTitle, tvDescription, tvPrice, tvDeadline,
+            tvPublisherName, tvPublisherMeta;
     private View btnBack, btnAccept;
 
     @Override
@@ -34,6 +35,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         tvDescription = findViewById(R.id.tv_task_description);
         tvPrice = findViewById(R.id.tv_task_price);
         tvDeadline = findViewById(R.id.tv_task_deadline);
+        tvPublisherName = findViewById(R.id.publisher_name);
+        tvPublisherMeta = findViewById(R.id.publisher_meta);
         btnBack = findViewById(R.id.btn_back);
         btnAccept = findViewById(R.id.btn_accept_task);
     }
@@ -53,6 +56,8 @@ public class TaskDetailActivity extends AppCompatActivity {
                     tvDescription.setText(task.getDescription());
                     tvPrice.setText(task.getFormattedPrice());
                     tvDeadline.setText(task.getRemainingTime());
+                    tvPublisherName.setText(task.getPublisherName());
+                    tvPublisherMeta.setText(task.getPublisherMeta());
                 });
             }
 
@@ -77,6 +82,9 @@ public class TaskDetailActivity extends AppCompatActivity {
                 task.setDescription(data.description);
                 task.setPrice(data.reward);
                 task.setDeadline(data.deadline);
+                task.setPublisherId(data.publisher.id);
+                task.setPublisherName(data.publisher.nickname);
+                task.setPublisherMeta("信誉积分・" + data.publisher.credit_score);
                 callback.onTaskLoaded(task);
             }
 
