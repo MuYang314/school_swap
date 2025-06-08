@@ -1,8 +1,11 @@
 package com.example.school_swap.network;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.util.Log;
 
 import com.example.school_swap.Product;
@@ -65,7 +68,7 @@ public class ProductHttpClient extends BaseHttpClient {
         }
     }
 
-    public static void uploadImages(Context context, List<Uri> imageUris, ImageUploadCallback callback) {
+    public static void uploadImages(Context context, List<Uri> imageUris, ApiCallback<List<String>> callback) {
         List<String> imageUids = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
         for (Uri uri : imageUris) {
@@ -99,20 +102,20 @@ public class ProductHttpClient extends BaseHttpClient {
                     Response response = client.newCall(request).execute();
                     if (response.isSuccessful()) {
                         String responseData = response.body().string();
-                        JSONObject jsonResponse = new JSONObject(responseData);
-                        int code = jsonResponse.getInt("code");
-                        if (code == 200) {
-                            String uid = jsonResponse.getString("uid");
+                        Type type = new TypeToken<BaseResponse<Image>>() {}.getType();
+                        BaseResponse<Image> imageResponse = gson.fromJson(responseData, type);
+                        if (imageResponse.code == 200) {
+                            String uid = imageResponse.data.uid;
                             synchronized (imageUids) {
                                 imageUids.add(uid);
                             }
                         }
                     }
-                } catch (IOException | org.json.JSONException e) {
+                } catch (IOException e) {
                     callback.onError("图片上传失败: " + e.getMessage());
                 } finally {
                     if (counter.incrementAndGet() == imageUris.size()) {
-                        callback.onAllImagesUploaded(imageUids);
+                        callback.onSuccess(imageUids);
                     }
                 }
             });
@@ -121,9 +124,9 @@ public class ProductHttpClient extends BaseHttpClient {
 
     public static void publishProduct(Context context, Product product, List<Uri> imageUris, ResponseCallback callback) {
         // 第一步：上传所有图片
-        uploadImages(context, imageUris, new ImageUploadCallback() {
+        uploadImages(context, imageUris, new ApiCallback<>() {
             @Override
-            public void onAllImagesUploaded(List<String> imageUids) {
+            public void onSuccess(List<String> imageUids) {
                 // 图片上传成功，将UIDs设置到商品对象
                 product.setImageUids(imageUids);
 
@@ -181,7 +184,7 @@ public class ProductHttpClient extends BaseHttpClient {
         });
     }
 
-    public static void productDetail(int productId, ProductDetailCallback<ProductData> callback) {
+    public static void productDetail(int productId, ApiCallback<ProductData> callback) {
         try {
             String url = BASE_URL + "/api/goods/" + productId;
             Request request = new Request.Builder()
@@ -219,5 +222,30 @@ public class ProductHttpClient extends BaseHttpClient {
         } catch (Exception e) {
             callback.onError("请求构建失败: " + e.getMessage());
         }
+    }
+
+    @SuppressLint("Range")
+    protected static String getFileName(ContentResolver contentResolver, Uri uri) {
+        String result = null;
+        if (Objects.equals(uri.getScheme(), "content")) {
+            Cursor cursor = contentResolver.query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                assert cursor != null;
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            assert result != null;
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 }

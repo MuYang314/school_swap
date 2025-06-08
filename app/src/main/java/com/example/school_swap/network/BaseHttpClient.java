@@ -25,7 +25,7 @@ public class BaseHttpClient {
     protected static final Gson gson = new Gson();
     protected static final ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-
+    // 分页类
     public static class PaginatedResponse<T> {
         public List<T> goods;  // 商品列表
         public int total;      // 总条目数
@@ -82,63 +82,18 @@ public class BaseHttpClient {
         public UserData publisher;
     }
 
-    public interface ApiCallback<T> {
-        void onSuccess(T data);
-        void onError(String error);
+    // 图片结构
+    public static class Image {
+        public String uid;
     }
 
-    public interface TaskCallback {
-        void onSuccess(List<Task> tasks);
+    public interface ApiCallback<T> {
+        void onSuccess(T data);
         void onError(String error);
     }
 
     public interface ResponseCallback {
         void onSuccess(String message);
         void onError(String error);
-    }
-
-    public interface LoginCallback<T> {
-        void onSuccess(T data);
-        void onError(String error);
-    }
-
-    public interface ProductCallback<T> {
-        void onSuccess(T products);
-        void onError(String error);
-    }
-
-    public interface ImageUploadCallback {
-        void onAllImagesUploaded(List<String> imageUids);
-        void onError(String error);
-    }
-
-    public interface ProductDetailCallback<T> {
-        void onSuccess(T data);
-        void onError(String error);
-    }
-
-    @SuppressLint("Range")
-    protected static String getFileName(ContentResolver contentResolver, Uri uri) {
-        String result = null;
-        if (Objects.equals(uri.getScheme(), "content")) {
-            Cursor cursor = contentResolver.query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                assert cursor != null;
-                cursor.close();
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            assert result != null;
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
     }
 }

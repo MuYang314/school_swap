@@ -130,7 +130,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void loadProductData(int productId, ProductLoadCallback callback) {
-        ProductHttpClient.productDetail(productId, new ProductHttpClient.ProductDetailCallback<>() {
+        ProductHttpClient.productDetail(productId, new BaseHttpClient.ApiCallback<>() {
             @Override
             public void onSuccess(ProductHttpClient.ProductData data) {
                 Product product = new Product();

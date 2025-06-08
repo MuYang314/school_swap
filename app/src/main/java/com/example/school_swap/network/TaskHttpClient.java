@@ -1,5 +1,7 @@
 package com.example.school_swap.network;
 
+import android.util.Log;
+
 import com.google.gson.reflect.TypeToken;
 
 import okhttp3.Call;
@@ -12,10 +14,11 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class TaskHttpClient extends BaseHttpClient {
-    public static void fetchTasks(LoginCallback<List<TaskData>> callback) {
+    public static void fetchTask(int page, int pageSize, ApiCallback<PaginatedResponse<TaskData>> callback) {
         try {
+            String url = BASE_URL + "/api/tasks/list?page=" + page + "&page_size=" + pageSize;
             Request request = new Request.Builder()
-                    .url(BASE_URL + "/api/tasks/list")
+                    .url(url)
                     .get()
                     .build();
 
@@ -29,9 +32,8 @@ public class TaskHttpClient extends BaseHttpClient {
                 public void onResponse(Call call, Response response) throws IOException {
                     String responseData = response.body().string();
                     try {
-                        Type type = new TypeToken<BaseResponse<List<TaskData>>>() {}.getType();
-                        BaseResponse<List<TaskData>> taskResponse = gson.fromJson(responseData, type);
-
+                        Type type = new TypeToken<BaseResponse<PaginatedResponse<TaskData>>>() {}.getType();
+                        BaseResponse<PaginatedResponse<TaskData>> taskResponse = gson.fromJson(responseData, type);
                         if (taskResponse.code == 200) {
                             callback.onSuccess(taskResponse.data);
                         } else {
@@ -39,6 +41,7 @@ public class TaskHttpClient extends BaseHttpClient {
                         }
                     } catch (Exception e) {
                         callback.onError("解析响应失败: " + e.getMessage());
+                        Log.d("Home解析响应失败", e.getMessage().toString());
                     }
                 }
             });
@@ -47,7 +50,6 @@ public class TaskHttpClient extends BaseHttpClient {
         }
     }
 
-    public static void publishTask(TaskData taskData, LoginCallback<TaskData> callback) {
-        // 实现逻辑参考login方法，使用TaskData作为请求体和响应体
+    public static void publishTask() {
     }
 }
