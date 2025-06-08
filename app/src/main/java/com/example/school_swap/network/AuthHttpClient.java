@@ -57,7 +57,7 @@ public class AuthHttpClient extends BaseHttpClient {
         }
     }
 
-    public static void register(String email, String password, String confirmPassword, String verificationCode, ResponseCallback callback) {
+    public static void register(String email, String password, String confirmPassword, String verificationCode, ApiCallback<String> callback) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);
@@ -100,7 +100,7 @@ public class AuthHttpClient extends BaseHttpClient {
         }
     }
 
-    public static void resetPassword(String email, String password, String confirmPassword, String verificationCode, ResponseCallback callback) {
+    public static void resetPassword(String email, String password, String confirmPassword, String verificationCode, ApiCallback<String> callback) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);
@@ -143,7 +143,7 @@ public class AuthHttpClient extends BaseHttpClient {
         }
     }
 
-    public static void getVerificationCode(String email, ResponseCallback callback) {
+    public static void getVerificationCode(String email, ApiCallback<String> callback) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);

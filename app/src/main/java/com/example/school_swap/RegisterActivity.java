@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.school_swap.network.AuthHttpClient;
+import com.example.school_swap.network.BaseHttpClient;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -69,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
         getVerificationCodeButton.setEnabled(false);
 
         // 调用获取验证码API
-        AuthHttpClient.getVerificationCode(email, new AuthHttpClient.ResponseCallback() {
+        AuthHttpClient.getVerificationCode(email, new BaseHttpClient.ApiCallback<>() {
             @Override
             public void onSuccess(String message) {
                 mainHandler.post(() -> {
@@ -139,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setEnabled(false);
 
         // 调用注册API
-        AuthHttpClient.register(email, password, confirmPassword, verificationCode, new AuthHttpClient.ResponseCallback() {
+        AuthHttpClient.register(email, password, confirmPassword, verificationCode, new BaseHttpClient.ApiCallback<>() {
             @Override
             public void onSuccess(String message) {
                 mainHandler.post(() -> {

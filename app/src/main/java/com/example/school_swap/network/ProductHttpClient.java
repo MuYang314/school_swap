@@ -122,7 +122,7 @@ public class ProductHttpClient extends BaseHttpClient {
         }
     }
 
-    public static void publishProduct(Context context, Product product, List<Uri> imageUris, ResponseCallback callback) {
+    public static void publishProduct(Context context, Product product, List<Uri> imageUris, ApiCallback<String> callback) {
         // 第一步：上传所有图片
         uploadImages(context, imageUris, new ApiCallback<>() {
             @Override

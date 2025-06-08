@@ -91,9 +91,4 @@ public class BaseHttpClient {
         void onSuccess(T data);
         void onError(String error);
     }
-
-    public interface ResponseCallback {
-        void onSuccess(String message);
-        void onError(String error);
-    }
 }
