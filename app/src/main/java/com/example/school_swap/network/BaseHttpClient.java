@@ -62,9 +62,15 @@ public class BaseHttpClient {
         }
     }
 
-    // 任务数据结构 (根据实际需求补充字段)
+    // 任务数据结构
     public static class TaskData {
-        // 添加实际需要的字段
+        public int id;
+        public String title;
+        public double reward;
+        public String description;
+        public String category;
+        public String deadline;
+        public UserData publisher;
     }
 
     public interface TaskCallback {
