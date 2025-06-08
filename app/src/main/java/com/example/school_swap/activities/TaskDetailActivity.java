@@ -1,6 +1,7 @@
 package com.example.school_swap.activities;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -99,12 +100,12 @@ public class TaskDetailActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
         btnAccept.setOnClickListener(v -> {
             // 弹出接单确认框（示例）
-            // new AlertDialog.Builder(this)
-            //     .setTitle("确认接单")
-            //     .setMessage("是否确认接收此任务？")
-            //     .setPositiveButton("确认", (dialog, which) -> {})
-            //     .setNegativeButton("取消", null)
-            //     .show();
+             new AlertDialog.Builder(this)
+                 .setTitle("确认接单")
+                 .setMessage("是否确认接收此任务？")
+                 .setPositiveButton("确认", (dialog, which) -> {})
+                 .setNegativeButton("取消", null)
+                 .show();
         });
     }
 
