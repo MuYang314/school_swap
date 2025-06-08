@@ -4,10 +4,14 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.school_swap.R;
 import com.example.school_swap.models.Task;
+import com.example.school_swap.network.BaseHttpClient;
+import com.example.school_swap.network.TaskHttpClient;
 
 public class TaskDetailActivity extends AppCompatActivity {
 
@@ -37,41 +41,67 @@ public class TaskDetailActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void initData() {
         // 接收任务ID
-        int taskId = getIntent().getIntExtra("extra_id", 0);
+        int taskId = getIntent().getIntExtra("task_id", 0);
 
-        // 加载模拟数据
-        Task task = loadTaskData(taskId);
+        // 从网络加载真实数据
+        loadTaskData(taskId, new TaskLoadCallback() {
+            @Override
+            public void onTaskLoaded(Task task) {
+                runOnUiThread(() -> {
+                    tvCategory.setText(task.getCategory());
+                    tvTitle.setText(task.getTitle());
+                    tvDescription.setText(task.getDescription());
+                    tvPrice.setText(task.getFormattedPrice());
+                    tvDeadline.setText(task.getRemainingTime());
+                });
+            }
 
-        // 绑定数据
-        tvCategory.setText(task.getCategory());
-        tvTitle.setText(task.getTitle());
-        tvDescription.setText(task.getDescription());
-        tvPrice.setText("¥" + task.getPrice());
-        tvDeadline.setText(task.getDeadline());
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    Toast.makeText(TaskDetailActivity.this,
+                            "加载失败: " + error, Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
-    private Task loadTaskData(int taskId) {
-        // 模拟数据
-        Task task = new Task();
-        task.setId(taskId);
-        task.setCategory("生活类");
-        task.setTitle("帮忙取快递（东门菜鸟驿站）");
-        task.setDescription("3个快递，大箱子1个，小盒子2个，送到3号楼201室");
-        task.setPrice(50.0);
-        task.setDeadline("今天18:00前");
-        return task;
+    private void loadTaskData(int taskId, TaskLoadCallback callback) {
+        TaskHttpClient.taskDetail(taskId, new BaseHttpClient.ApiCallback<>() {
+            @Override
+            public void onSuccess(BaseHttpClient.TaskData data) {
+                Task task = new Task();
+                task.setId(data.id);
+                task.setTitle(data.title);
+                task.setCategory(data.category);
+                task.setDescription(data.description);
+                task.setPrice(data.reward);
+                task.setDeadline(data.deadline);
+                callback.onTaskLoaded(task);
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
     }
 
     private void setupListeners() {
         btnBack.setOnClickListener(v -> finish());
         btnAccept.setOnClickListener(v -> {
             // 弹出接单确认框（示例）
-//             new AlertDialog.Builder(this)
-//                 .setTitle("确认接单")
-//                 .setMessage("是否确认接收此任务？")
-//                 .setPositiveButton("确认", (dialog, which) -> {})
-//                 .setNegativeButton("取消", null)
-//                 .show();
+            // new AlertDialog.Builder(this)
+            //     .setTitle("确认接单")
+            //     .setMessage("是否确认接收此任务？")
+            //     .setPositiveButton("确认", (dialog, which) -> {})
+            //     .setNegativeButton("取消", null)
+            //     .show();
         });
+    }
+
+    interface TaskLoadCallback {
+        void onTaskLoaded(Task task);
+        void onError(String error);
     }
 }

@@ -61,33 +61,30 @@ public class ProductDetailActivity extends AppCompatActivity {
         product.setImageUids(new ArrayList<>()); // 初始化空列表
 
         // 加载真实数据
-        loadProductData(productId, new ProductLoadCallback() {
-            @Override
-            public void onProductLoaded(Product loadedProduct) {
-                // 更新UI数据
-                runOnUiThread(() -> {
-                    tvPrice.setText(loadedProduct.getFormattedPrice());
-                    tvTitle.setText(loadedProduct.getTitle());
-                    tvDescription.setText(loadedProduct.getDescription());
-                    tvSellerName.setText(loadedProduct.getSellerName());
-                    tvSellerMeta.setText(loadedProduct.getSellerMeta());
+        loadProductData(productId, loadedProduct -> {
+            // 更新UI数据
+            runOnUiThread(() -> {
+                tvPrice.setText(loadedProduct.getFormattedPrice());
+                tvTitle.setText(loadedProduct.getTitle());
+                tvDescription.setText(loadedProduct.getDescription());
+                tvSellerName.setText(loadedProduct.getSellerName());
+                tvSellerMeta.setText(loadedProduct.getSellerMeta());
 
-                    // 更新轮播图数据
-                    ImageAdapter imageAdapter = new ImageAdapter(
-                            loadedProduct.getImageUids() != null ?
-                                    loadedProduct.getImageUids() :
-                                    new ArrayList<>()
-                    );
-                    // 确保适配器只被设置一次
-                    if (vpProductImages.getAdapter() != null) {
-                        vpProductImages.setAdapter(null); // 移除旧的适配器
-                    }
-                    vpProductImages.setAdapter(imageAdapter);
+                // 更新轮播图数据
+                ImageAdapter imageAdapter = new ImageAdapter(
+                        loadedProduct.getImageUids() != null ?
+                                loadedProduct.getImageUids() :
+                                new ArrayList<>()
+                );
+                // 确保适配器只被设置一次
+                if (vpProductImages.getAdapter() != null) {
+                    vpProductImages.setAdapter(null); // 移除旧的适配器
+                }
+                vpProductImages.setAdapter(imageAdapter);
 
-                    // 初始化指示器
-                    initIndicators(imageAdapter.getItemCount());
-                });
-            }
+                // 初始化指示器
+                initIndicators(imageAdapter.getItemCount());
+            });
         });
 
         // 监听页面变化更新指示器
