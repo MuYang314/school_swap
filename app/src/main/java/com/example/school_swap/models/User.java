@@ -1,4 +1,4 @@
-package com.example.school_swap;
+package com.example.school_swap.models;
 
 public class User {
     private int id;

@@ -1,4 +1,4 @@
-package com.example.school_swap;
+package com.example.school_swap.models;
 
 import android.annotation.SuppressLint;
 

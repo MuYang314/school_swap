@@ -1,6 +1,5 @@
-package com.example.school_swap;
+package com.example.school_swap.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +23,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.school_swap.R;
+import com.example.school_swap.models.Task;
 import com.example.school_swap.network.BaseHttpClient;
 import com.example.school_swap.network.TaskHttpClient;
 

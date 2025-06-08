@@ -1,4 +1,4 @@
-package com.example.school_swap;
+package com.example.school_swap.activities;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.school_swap.models.Product;
+import com.example.school_swap.R;
 import com.example.school_swap.network.BaseHttpClient;
 import com.example.school_swap.network.ProductHttpClient;
 import com.squareup.picasso.Picasso;

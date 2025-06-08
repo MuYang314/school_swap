@@ -1,4 +1,4 @@
-package com.example.school_swap;
+package com.example.school_swap.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,13 +6,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.school_swap.R;
 
 public class UserActivity extends AppCompatActivity {
     Button login_logout;

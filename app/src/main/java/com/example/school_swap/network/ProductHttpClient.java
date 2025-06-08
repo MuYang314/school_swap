@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.util.Log;
 
-import com.example.school_swap.Product;
+import com.example.school_swap.models.Product;
 import com.google.gson.reflect.TypeToken;
 
 import okhttp3.Call;

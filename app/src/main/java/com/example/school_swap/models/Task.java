@@ -1,14 +1,12 @@
-package com.example.school_swap;
+package com.example.school_swap.models;
 
 import android.os.Build;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Locale;
 
 public class Task implements Serializable {
     private int id;

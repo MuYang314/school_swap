@@ -2,7 +2,6 @@ package com.example.school_swap.network;
 
 import android.util.Log;
 
-import com.example.school_swap.User;
 import com.google.gson.reflect.TypeToken;
 
 import okhttp3.Call;

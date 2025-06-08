@@ -1,20 +1,11 @@
 package com.example.school_swap.network;
 
-import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.OpenableColumns;
-
-import com.example.school_swap.Product;
-import com.example.school_swap.Task;
 import com.google.gson.Gson;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

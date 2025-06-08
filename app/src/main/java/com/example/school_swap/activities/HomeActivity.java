@@ -1,4 +1,4 @@
-package com.example.school_swap;
+package com.example.school_swap.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -34,6 +34,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.example.school_swap.models.Product;
+import com.example.school_swap.R;
 import com.example.school_swap.network.BaseHttpClient;
 import com.example.school_swap.network.ProductHttpClient;
 import com.squareup.picasso.Picasso;

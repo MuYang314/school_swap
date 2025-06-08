@@ -1,16 +1,15 @@
-package com.example.school_swap;
+package com.example.school_swap.activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.school_swap.R;
 import com.example.school_swap.network.AuthHttpClient;
-import com.example.school_swap.network.BaseHttpClient;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText;

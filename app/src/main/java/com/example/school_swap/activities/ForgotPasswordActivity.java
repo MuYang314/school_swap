@@ -1,4 +1,4 @@
-package com.example.school_swap;
+package com.example.school_swap.activities;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.school_swap.R;
 import com.example.school_swap.network.AuthHttpClient;
 import com.example.school_swap.network.BaseHttpClient;
 

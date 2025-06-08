@@ -1,10 +1,13 @@
-package com.example.school_swap;
+package com.example.school_swap.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.school_swap.R;
+import com.example.school_swap.models.Task;
 
 public class TaskDetailActivity extends AppCompatActivity {
 

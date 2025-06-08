@@ -1,4 +1,4 @@
-package com.example.school_swap;
+package com.example.school_swap.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.example.school_swap.models.Product;
+import com.example.school_swap.R;
 import com.example.school_swap.network.BaseHttpClient;
 import com.example.school_swap.network.ProductHttpClient;
 //import com.example.school_swap.network.HttpClient;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
