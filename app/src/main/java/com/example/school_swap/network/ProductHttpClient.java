@@ -29,7 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ProductHttpClient extends BaseHttpClient {
-    public static void fetchProducts(int page, int pageSize, ProductCallback callback) {
+    public static void fetchProducts(int page, int pageSize, ProductCallback<List<ProductData>> callback) {
         try {
             String url = BASE_URL + "/api/goods/list?page=" + page + "&page_size=" + pageSize;
             Request request = new Request.Builder()
@@ -45,42 +45,20 @@ public class ProductHttpClient extends BaseHttpClient {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        String responseData = response.body().string();
-                        try {
-                            JSONObject jsonResponse = new JSONObject(responseData);
-                            int code = jsonResponse.getInt("code");
-                            if (code == 200) {
-                                JSONObject data = jsonResponse.getJSONObject("data");
-                                List<Product> products = new ArrayList<>();
-                                for (int i = 0; i < data.getJSONArray("goods").length(); i++) {
-                                    JSONObject good = data.getJSONArray("goods").getJSONObject(i);
-                                    int id = good.getInt("id");
-                                    String title = good.getString("title");
-                                    double price = good.getDouble("price");
-                                    String category = good.getString("category");
-                                    String created_at = good.getString("created_at");
-                                    int count = good.getInt("count");
-                                    List<String> imageUrls = gson.fromJson(good.getJSONArray("images").toString(), new TypeToken<List<String>>() {}.getType());
-                                    Product product = new Product();
-                                    product.setId(id);
-                                    product.setTitle(title);
-                                    product.setPrice(price);
-                                    product.setCategory(category);
-                                    product.setImageUids(imageUrls);
-                                    product.setCreated_at(created_at);
-                                    product.setCount(count);
-                                    products.add(product);
-                                }
-                                callback.onSuccess(products);
-                            } else {
-                                callback.onError(jsonResponse.getString("message"));
-                            }
-                        } catch (Exception e) {
-                            callback.onError("解析响应失败: " + e.getMessage());
+                    String responseData = response.body().string();
+                    try {
+                        Type type = new TypeToken<BaseResponse<List<ProductData>>>() {}.getType();
+                        BaseResponse<List<ProductData>> productResponse = gson.fromJson(responseData, type);
+
+                        if (productResponse.code == 200) {
+                            callback.onSuccess(productResponse.data);
+                            Log.d("data", productResponse.data.toString());
+                        } else {
+                            callback.onError(productResponse.message);
                         }
-                    } else {
-                        callback.onError("请求失败，状态码: " + response.code());
+                    } catch (Exception e) {
+                        callback.onError("解析响应失败: " + e.getMessage());
+                        Log.d("Home解析响应失败", e.getMessage().toString());
                     }
                 }
             });

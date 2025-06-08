@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.example.school_swap.network.BaseHttpClient;
 import com.example.school_swap.network.ProductHttpClient;
 import com.squareup.picasso.Picasso;
 
@@ -256,26 +258,44 @@ public class HomeActivity extends AppCompatActivity {
 
     // 获取商品数据
     private void getProducts() {
-        ProductHttpClient.fetchProducts(1, 10, new ProductHttpClient.ProductCallback() {
+        ProductHttpClient.fetchProducts(1, 10, new ProductHttpClient.ProductCallback<>() {
             @Override
-            public void onSuccess(List<Product> products) {
-                allProducts.clear();
-                allProducts.addAll(products);
-                // 更新RecyclerView
-                productAdapter = new ProductAdapter(allProducts, productId -> {
-                    Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
-                    intent.putExtra("product_id", productId);
-                    startActivity(intent);
+            public void onSuccess(List<ProductHttpClient.ProductData> products) {
+                runOnUiThread(() -> {
+                    allProducts.clear();
+                    allProducts.addAll(convertToProductList(products));
+                    productAdapter = new ProductAdapter(allProducts, productId -> {
+                        Intent intent = new Intent(HomeActivity.this, ProductDetailActivity.class);
+                        intent.putExtra("product_id", productId);
+                        startActivity(intent);
+                    });
+                    productGrid.setAdapter(productAdapter);
                 });
-                productGrid.setAdapter(productAdapter);
             }
 
             @Override
             public void onError(String error) {
-                // 处理错误，例如显示错误提示
-                System.out.println("获取商品数据失败: " + error);
+                runOnUiThread(() -> Toast.makeText(HomeActivity.this,
+                        "获取商品失败: " + error, Toast.LENGTH_SHORT).show());
             }
         });
+    }
+
+    // 转换方法（可选）
+    private List<Product> convertToProductList(List<ProductHttpClient.ProductData> productDataList) {
+        List<Product> products = new ArrayList<>();
+        for (ProductHttpClient.ProductData data : productDataList) {
+            Product product = new Product();
+            product.setId(data.id);
+            product.setTitle(data.title);
+            product.setPrice(data.price);
+            product.setCategory(data.category);
+            product.setImageUids(data.images);
+            product.setCreated_at(data.created_at);
+            product.setCount(data.count); // 默认值或从data中获取
+            products.add(product);
+        }
+        return products;
     }
 
     // 商品适配器

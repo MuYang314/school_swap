@@ -49,6 +49,7 @@ public class BaseHttpClient {
         public String description;
         public String category;
         public Double price;
+        public int count;
         public List<String> images;
         public String status;
         public String created_at;
@@ -88,8 +89,8 @@ public class BaseHttpClient {
         void onError(String error);
     }
 
-    public interface ProductCallback {
-        void onSuccess(List<Product> products);
+    public interface ProductCallback<T> {
+        void onSuccess(T products);
         void onError(String error);
     }
 
