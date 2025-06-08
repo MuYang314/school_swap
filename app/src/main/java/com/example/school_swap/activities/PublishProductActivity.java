@@ -118,7 +118,11 @@ public class PublishProductActivity extends AppCompatActivity {
         ProductHttpClient.publishProduct(this, product, imageUris, new BaseHttpClient.ApiCallback<>() {
             @Override
             public void onSuccess(String message) {
-
+                // 使用 runOnUiThread 方法确保 Toast 在主线程中显示
+                runOnUiThread(() -> {
+                    Toast.makeText(PublishProductActivity.this, "商品发布成功：" + productName, Toast.LENGTH_SHORT).show();
+                    finish();
+                });
             }
 
             @Override
@@ -126,12 +130,6 @@ public class PublishProductActivity extends AppCompatActivity {
 
             }
         });
-
-        // 使用 runOnUiThread 方法确保 Toast 在主线程中显示
-//        runOnUiThread(() -> {
-            Toast.makeText(this, "商品发布成功：" + productName, Toast.LENGTH_SHORT).show();
-            finish();
-//        });
     }
 
     @SuppressLint("NotifyDataSetChanged")
