@@ -54,7 +54,6 @@
                         android:id="@+id/tv_task_category"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="生活类"
                         android:textSize="12sp"
                         android:textColor="#2196F3"
                         android:background="@drawable/task_category_background"
@@ -73,7 +72,6 @@
                         android:id="@+id/tv_task_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="¥50"
                         android:textColor="#FF9800"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -155,7 +153,6 @@
                         android:id="@+id/publisher_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="李同学"
                         android:textColor="#333"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -165,7 +162,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:text="信用分 · 100"
                         android:textColor="#999"
                         android:textSize="12sp" />
                 </LinearLayout>
