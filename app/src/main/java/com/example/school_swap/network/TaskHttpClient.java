@@ -1,12 +1,17 @@
 package com.example.school_swap.network;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.example.school_swap.models.Task;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
@@ -90,5 +95,51 @@ public class TaskHttpClient extends BaseHttpClient {
             Log.d("请求构建失败", Objects.requireNonNull(e.getMessage()));
 
         }
+    }
+
+    public static void publishTask(Context context, Task task, ApiCallback<String> callback) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("publisher", task.getPublisherId());
+            json.put("title", task.getTitle());
+            json.put("reward", task.getPrice());
+            json.put("deadline", task.getDeadline());
+            json.put("description", task.getDescription());
+            json.put("category", task.getCategory());
+
+            RequestBody body = RequestBody.create(json.toString(), JSON);
+            Request request = new Request.Builder()
+                    .url(BASE_URL + "/api/tasks/publish")
+                    .post(body)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    callback.onError("发布失败: " + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseData = response.body().string();
+                    try {
+                        JSONObject jsonResponse = new JSONObject(responseData);
+                        int code = jsonResponse.getInt("code");
+                        String message = jsonResponse.getString("message");
+
+                        if (code == 200) {
+                            callback.onSuccess(message);
+                        } else {
+                            callback.onError(message);
+                        }
+                    } catch (Exception e) {
+                        callback.onError("解析响应失败: " + e.getMessage());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            callback.onError(e.getMessage());
+        }
+
     }
 }
