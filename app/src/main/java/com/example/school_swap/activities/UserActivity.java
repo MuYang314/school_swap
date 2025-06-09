@@ -1,11 +1,13 @@
 package com.example.school_swap.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,10 +18,12 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.school_swap.R;
 
 public class UserActivity extends AppCompatActivity {
+    TextView tvUserName, tvCreditScore;
     Button login_logout;
     boolean isLogin;
     SharedPreferences sharedPreferences;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,8 @@ public class UserActivity extends AppCompatActivity {
         });
 
         // 初始化视图
+        tvUserName = findViewById(R.id.user_name);
+        tvCreditScore = findViewById(R.id.credit_score);
         login_logout = findViewById(R.id.login_logout);
         login_logout.setText("登录");
 
@@ -44,6 +50,8 @@ public class UserActivity extends AppCompatActivity {
         if (isLogin) {
             login_logout.setBackgroundResource(R.drawable.button_primary);
             login_logout.setText("退出登录");
+            // 初始化用户信息
+            initUserInfo();
         }
 
         // 设置点击事件
@@ -51,6 +59,14 @@ public class UserActivity extends AppCompatActivity {
 
         // 设置导航栏点击事件
         setupTabBar();
+    }
+
+    private void initUserInfo() {
+        // 从SharedPreferences中获取用户信息
+        String username = sharedPreferences.getString("nickname", "");
+        int credit_score = sharedPreferences.getInt("credit_score", 0);
+        tvUserName.setText(username);
+        tvCreditScore.setText(String.valueOf(credit_score));
     }
 
     private void onClick() {
