@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+    <!-- 订单标签页 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:borderBottom="1px solid #f0f0f0">
+
+        <TextView
+            android:id="@+id/order_tab_all"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="全部"
+            android:textSize="14sp"
+            android:textColor="#666"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/order_tab_pending_payment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="待付款"
+            android:textSize="14sp"
+            android:textColor="#666"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/order_tab_pending_transaction"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="待交易"
+            android:textSize="14sp"
+            android:textColor="#666"
+            android:gravity="center" />
+
+        <!-- 可以根据需要添加更多标签 -->
+    </LinearLayout>
+
+    <!-- 订单列表 -->
+    <RecyclerView
+        android:id="@+id/order_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp" />
+</LinearLayout>
