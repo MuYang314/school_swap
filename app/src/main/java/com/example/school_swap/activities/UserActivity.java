@@ -56,6 +56,11 @@ public class UserActivity extends AppCompatActivity {
 
         // 设置点击事件
         login_logout.setOnClickListener(v -> onClick());
+        // 在 UserActivity.java 中
+        findViewById(R.id.menu_my_orders).setOnClickListener(v -> {
+            Intent intent = new Intent(UserActivity.this, MyOrdersActivity.class);
+            startActivity(intent);
+        });
 
         // 设置导航栏点击事件
         setupTabBar();
