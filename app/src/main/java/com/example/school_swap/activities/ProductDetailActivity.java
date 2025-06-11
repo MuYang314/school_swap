@@ -194,7 +194,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             Log.d("imageUid", "uid: " + imageUrls.get(position));
             // 加载图片
             Picasso.get()
-                    .load("http://192.168.198.76:8000/api/image/" + imageUrls.get(position))
+                    .load("http://192.168.225.76:8000/api/image/" + imageUrls.get(position))
                     .into(holder.imageView);
         }
 

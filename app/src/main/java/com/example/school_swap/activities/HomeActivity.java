@@ -413,7 +413,7 @@ public class HomeActivity extends AppCompatActivity {
         public void onBindViewHolder(ProductViewHolder holder, int position) {
             Product product = productList.get(position);
             Picasso.get()
-                    .load("http://192.168.198.76:8000/api/image/" + product.getImageUids().get(0))
+                    .load("http://192.168.225.76:8000/api/image/" + product.getImageUids().get(0))
                     .into(holder.productImage);
             holder.productTitle.setText(product.getTitle());
             holder.productPrice.setText("¥" + product.getPrice());
