@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BaseHttpClient {
-    protected static final String BASE_URL = "http://192.168.203.76:8000";
+    protected static final String BASE_URL = "http://192.168.225.76:8000";
     protected static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     protected static final OkHttpClient client = new OkHttpClient();
     protected static final Gson gson = new Gson();
