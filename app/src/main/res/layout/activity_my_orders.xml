@@ -2,54 +2,130 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@android:color/white">
+    tools:context=".activities.MyOrdersActivity"
+    android:padding="20dp">
 
-    <!-- 订单标签页 -->
+    <!-- 标题栏 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:background="#fff"
         android:orientation="horizontal"
-        android:background="@android:color/white"
-        android:borderBottom="1px solid #f0f0f0">
+        android:padding="10dp"
+        android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/order_tab_all"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="全部"
-            android:textSize="14sp"
-            android:textColor="#666"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/order_tab_pending_payment"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="待付款"
-            android:textSize="14sp"
-            android:textColor="#666"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/order_tab_pending_transaction"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="待交易"
-            android:textSize="14sp"
-            android:textColor="#666"
-            android:gravity="center" />
-
-        <!-- 可以根据需要添加更多标签 -->
+            android:id="@+id/header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的订单"
+            android:textSize="18sp"
+            android:textColor="#333"
+            android:fontFamily="sans-serif-medium" />
     </LinearLayout>
 
-    <!-- 订单列表 -->
-    <RecyclerView
+    <!-- 订单分类标签栏 - 修改为与首页相同的样式 -->
+    <HorizontalScrollView
+        android:id="@+id/order_tabs_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/order_tabs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
+
+            <TextView
+                android:id="@+id/tab_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="全部"
+                android:textSize="14sp"
+                android:textColor="#666"
+                android:paddingLeft="15dp"
+                android:paddingTop="8dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/category_tab_background_active"
+                android:layout_marginEnd="5dp"
+                android:tag="all" />
+
+            <TextView
+                android:id="@+id/tab_pending_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingTop="8dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/category_tab_background"
+                android:text="待付款"
+                android:textSize="14sp"
+                android:textColor="#666"
+                android:layout_marginEnd="5dp"
+                android:tag="pending_payment" />
+
+            <TextView
+                android:id="@+id/tab_paid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingTop="8dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/category_tab_background"
+                android:text="已付款"
+                android:textSize="14sp"
+                android:textColor="#666"
+                android:layout_marginEnd="5dp"
+                android:tag="paid" />
+
+            <TextView
+                android:id="@+id/tab_completed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingTop="8dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/category_tab_background"
+                android:text="已完成"
+                android:textSize="14sp"
+                android:textColor="#666"
+                android:layout_marginEnd="5dp"
+                android:tag="completed" />
+
+            <TextView
+                android:id="@+id/tab_canceled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingTop="8dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/category_tab_background"
+                android:text="已取消"
+                android:textSize="14sp"
+                android:textColor="#666"
+                android:tag="canceled" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- 替换原来的ListView -->
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/order_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:background="#f8f8f8"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 </LinearLayout>

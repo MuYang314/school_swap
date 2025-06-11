@@ -1,22 +1,21 @@
 package com.example.school_swap.activities;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.school_swap.network.BaseHttpClient;
-import com.example.school_swap.network.ProductHttpClient;
+
+import com.example.school_swap.R;
+import com.example.school_swap.adapters.OrderAdapter;
+import com.example.school_swap.models.Order;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyOrdersActivity extends AppCompatActivity {
-
-    private RecyclerView orderList;
+public class MyOrdersActivity extends AppCompatActivity implements OrderAdapter.OnOrderActionListener {
+    private List<Order> allOrders;
     private OrderAdapter orderAdapter;
-    private List<BaseHttpClient.ProductData> allOrders = new ArrayList<>();
-    private TextView[] orderTabs;
+    private TextView[] categoryTabs;
     private int selectedTabIndex = 0; // 默认选中第一个标签
 
     @Override
@@ -24,98 +23,110 @@ public class MyOrdersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_orders);
 
-        // 初始化RecyclerView
-        orderList = findViewById(R.id.order_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        orderList.setLayoutManager(layoutManager);
+        // 初始化数据
+        allOrders = new ArrayList<>();
+        allOrders.add(new Order("20240101001", "待付款", "iPhone 12 128GB 白色 95新", 3999.99));
+        allOrders.add(new Order("20240101002", "已付款", "MacBook Pro 2020 13寸", 8999.2));
+        allOrders.add(new Order("20240101003", "已完成", "AirPods Pro 2代", 1299.99));
+        allOrders.add(new Order("20240101004", "已取消", "iPad Air 64GB", 3399.99));
+        allOrders.add(new Order("20240101005", "待付款", "Apple Watch Series 7", 2399.88));
 
-        // 初始化订单适配器
-        orderAdapter = new OrderAdapter(allOrders);
-        orderList.setAdapter(orderAdapter);
+        // 初始化RecyclerView和适配器
+        RecyclerView orderRecyclerView = findViewById(R.id.order_list);
+        orderAdapter = new OrderAdapter(new ArrayList<>(allOrders), this);
+        orderRecyclerView.setAdapter(orderAdapter);
 
-        // 初始化订单标签
-        initOrderTabs();
-
-        // 获取订单数据
-        getOrders(1);
+        initCategoryTabs();
     }
 
-    private void initOrderTabs() {
-        // 获取所有订单标签
-        orderTabs = new TextView[]{
-                findViewById(R.id.order_tab_all),
-                findViewById(R.id.order_tab_pending_payment),
-                findViewById(R.id.order_tab_pending_transaction)
+    // 初始化分类标签并设置点击事件
+    private void initCategoryTabs() {
+        // 获取所有分类标签
+        categoryTabs = new TextView[]{
+                findViewById(R.id.tab_all),
+                findViewById(R.id.tab_pending_payment),
+                findViewById(R.id.tab_paid),
+                findViewById(R.id.tab_completed),
+                findViewById(R.id.tab_canceled)
         };
 
         // 设置点击事件
-        for (int i = 0; i < orderTabs.length; i++) {
+        for (int i = 0; i < categoryTabs.length; i++) {
             final int index = i;
-            orderTabs[i].setOnClickListener(v -> {
-                switchOrderTab(index);
-                // 这里可以添加标签切换后的数据加载逻辑
-                loadOrderData(index);
+            categoryTabs[i].setOnClickListener(v -> {
+                switchCategoryTab(index);
+                // 根据标签的tag属性过滤订单
+                String statusTag = (String) categoryTabs[index].getTag();
+                filterOrders(statusTag);
             });
         }
     }
 
-    private void switchOrderTab(int newIndex) {
+    // 切换分类标签状态
+    private void switchCategoryTab(int newIndex) {
         // 恢复之前选中的标签样式
-        orderTabs[selectedTabIndex].setTextColor(getResources().getColor(android.R.color.darker_gray));
+        categoryTabs[selectedTabIndex].setBackgroundResource(R.drawable.category_tab_background);
 
         // 设置新选中的标签样式
-        orderTabs[newIndex].setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+        categoryTabs[newIndex].setBackgroundResource(R.drawable.category_tab_background_active);
+
+        // 添加点击动画
+        categoryTabs[newIndex].animate()
+                .scaleX(1.05f)
+                .scaleY(1.05f)
+                .setDuration(100)
+                .withEndAction(() -> categoryTabs[newIndex].animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(50)
+                        .start())
+                .start();
 
         // 更新选中索引
         selectedTabIndex = newIndex;
     }
 
-    private void loadOrderData(int tabIndex) {
-        // 根据标签索引过滤订单数据
-        List<BaseHttpClient.ProductData> filteredOrders = new ArrayList<>();
-        switch (tabIndex) {
-            case 0: // 全部
-                filteredOrders = allOrders;
-                break;
-            case 1: // 待付款
-                // 过滤待付款的订单
-                for (BaseHttpClient.ProductData order : allOrders) {
-                    if (order.status.equals("pending_payment")) {
-                        filteredOrders.add(order);
-                    }
+    // 根据状态过滤订单
+    private void filterOrders(String status) {
+        List<Order> filteredOrders = new ArrayList<>();
+        if ("all".equals(status)) {
+            filteredOrders.addAll(allOrders);
+        } else {
+            String statusText = getStatusText(status);
+            for (Order order : allOrders) {
+                if (statusText.equals(order.getOrderStatus())) {
+                    filteredOrders.add(order);
                 }
-                break;
-            case 2: // 待交易
-                // 过滤待交易的订单
-                for (BaseHttpClient.ProductData order : allOrders) {
-                    if (order.status.equals("pending_transaction")) {
-                        filteredOrders.add(order);
-                    }
-                }
-                break;
-            default:
-                filteredOrders = allOrders;
+            }
         }
-
-        // 更新RecyclerView
-        orderAdapter = new OrderAdapter(filteredOrders);
-        orderList.setAdapter(orderAdapter);
+        orderAdapter.updateOrders(filteredOrders);
     }
 
-    private void getOrders(int page) {
-        ProductHttpClient.fetchProducts(page, 10, new BaseHttpClient.ApiCallback<BaseHttpClient.PaginatedResponse<BaseHttpClient.ProductData>>() {
-            @Override
-            public void onSuccess(BaseHttpClient.PaginatedResponse<BaseHttpClient.ProductData> data) {
-                runOnUiThread(() -> {
-                    allOrders.addAll(data.list);
-                    orderAdapter.notifyDataSetChanged();
-                });
-            }
+    // 将tag转换为显示文本
+    private String getStatusText(String status) {
+        switch (status) {
+            case "pending_payment":
+                return "待付款";
+            case "paid":
+                return "已付款";
+            case "completed":
+                return "已完成";
+            case "canceled":
+                return "已取消";
+            default:
+                return "";
+        }
+    }
 
-            @Override
-            public void onError(String error) {
-                // 处理错误
-            }
-        });
+    @Override
+    public void onPayClick(Order order) {
+        // 处理付款逻辑
+        // 例如: 跳转到支付页面
+    }
+
+    @Override
+    public void onCancelClick(Order order) {
+        // 处理取消订单逻辑
+        // 例如: 显示确认对话框
     }
 }

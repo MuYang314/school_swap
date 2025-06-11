@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园交换平台 - 用户页面子页面原型设计</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .prototype-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .screen {
+            width: 375px;
+            height: 812px;
+            background-color: #fff;
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-title {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .status-bar {
+            height: 44px;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .status-bar .time {
+            font-weight: bold;
+        }
+
+        .status-bar .icons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .header {
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f8f8f8;
+            max-height: calc(100% - 150px);
+        }
+
+        .tab-bar {
+            height: 60px;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .tab-item.active {
+            color: #4CAF50;
+        }
+
+        .tab-item i {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        /* 登录页样式 */
+        .login-screen {
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .login-logo {
+            width: 120px;
+            height: 120px;
+            background-color: #4CAF50;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            color: white;
+            font-size: 40px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .login-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .wechat-login-btn {
+            width: 100%;
+            height: 50px;
+            background-color: #07C160;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .wechat-login-btn i {
+            margin-right: 10px;
+        }
+
+        .login-terms {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+
+        /* 首页样式 */
+        .search-bar {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+        }
+
+        .search-input {
+            flex: 1;
+            height: 40px;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            color: #999;
+        }
+
+        .search-input i {
+            margin-right: 10px;
+        }
+
+        .category-tabs {
+            display: flex;
+            padding: 15px 10px;
+            background-color: #fff;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .category-tab {
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 18px;
+            font-size: 14px;
+            color: #666;
+            background-color: #f5f5f5;
+        }
+
+        .category-tab.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .product-image {
+            height: 180px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 40px;
+        }
+
+        .product-info {
+            padding: 10px;
+        }
+
+        .product-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #FF5722;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* 商品详情页样式 */
+        .product-slider {
+            height: 375px;
+            background-color: #f0f0f0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 60px;
+        }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .slider-dot.active {
+            width: 20px;
+            background-color: white;
+        }
+
+        .product-detail {
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .product-detail-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-detail-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF5722;
+            margin-bottom: 15px;
+        }
+
+        .product-attributes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .product-attribute {
+            padding: 5px 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .product-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .seller-info {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #fff;
+            margin-top: 10px;
+        }
+
+        .seller-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: #f0f0f0;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 24px;
+        }
+
+        .seller-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .seller-meta {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .action-bar {
+            display: flex;
+            padding: 15px 20px;
+            background-color: #fff;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .action-btn-small {
+            width: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            margin-right: 10px;
+        }
+
+        .action-btn-small i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .action-btn-primary {
+            flex: 1;
+            height: 45px;
+            background-color: #FF5722;
+            color: white;
+            border: none;
+            border-radius: 22.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* 发布商品页样式 */
+        .form-group {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: #fff;
+        }
+
+        .form-label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding-left: 15px;
+            padding-right: 15px;
+            font-size: 14px;
+            color: #333;
+            line-height: 40px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            height: 100px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding-left: 15px;
+            padding-right: 15px;
+            font-size: 14px;
+            color: #333;
+            resize: none;
+            line-height: 1.5;
+        }
+
+        .upload-photos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .upload-photo-item {
+            aspect-ratio: 1;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 24px;
+        }
+
+        .form-select {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 0 15px;
+            font-size: 14px;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .form-submit {
+            margin: 30px 20px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 50px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* 个人中心页样式 */
+        .profile-header {
+            padding: 30px 20px;
+            background-color: #4CAF50;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 40px;
+            background-color: white;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 40px;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-id {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .profile-stats {
+            display: flex;
+            padding: 15px 0;
+            background-color: #fff;
+        }
+
+        .profile-stat-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            position: relative;
+        }
+
+        .profile-stat-item:not(:last-child):after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 15%;
+            bottom: 15%;
+            width: 1px;
+            background-color: #f0f0f0;
+        }
+
+        .profile-stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .menu-list {
+            margin-top: 10px;
+            background-color: #fff;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: #4CAF50;
+            font-size: 18px;
+        }
+
+        .menu-title {
+            flex: 1;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .menu-arrow {
+            color: #ccc;
+        }
+
+        /* 消息页样式 */
+        .message-list {
+            background-color: #fff;
+        }
+
+        .message-item {
+            display: flex;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .message-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: #f0f0f0;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 24px;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .message-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .message-badge {
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: #FF5722;
+            color: white;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+        }
+
+        /* 聊天详情页样式 */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            display: flex;
+        }
+
+        .chat-message.received {
+            justify-content: flex-start;
+        }
+
+        .chat-message.sent {
+            justify-content: flex-end;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background-color: #f0f0f0;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 20px;
+        }
+
+        .chat-bubble {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .chat-message.received .chat-bubble {
+            background-color: #f5f5f5;
+            color: #333;
+            border-top-left-radius: 4px;
+        }
+
+        .chat-message.sent .chat-bubble {
+            background-color: #4CAF50;
+            color: white;
+            border-top-right-radius: 4px;
+        }
+
+        .chat-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .chat-input-container {
+            padding: 10px 15px;
+            background-color: #f8f8f8;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input {
+            flex: 1;
+            height: 40px;
+            background-color: #fff;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            padding: 0 15px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .chat-send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background-color: #4CAF50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        /* 订单页样式 */
+        .order-tabs {
+            display: flex;
+            background-color: #fff;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .order-tab {
+            flex: 1;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
+            position: relative;
+        }
+
+        .order-tab.active {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .order-tab.active:after {
+            content: '';
+            position: absolute;
+            left: 25%;
+            right: 25%;
+            bottom: 0;
+            height: 3px;
+            background-color: #4CAF50;
+            border-radius: 1.5px;
+        }
+
+        .order-card {
+            margin: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .order-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .order-id {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .order-status {
+            font-size: 14px;
+            color: #FF5722;
+            font-weight: bold;
+        }
+
+        .order-product {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .order-product-image {
+            width: 80px;
+            height: 80px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 30px;
+        }
+
+        .order-product-info {
+            flex: 1;
+        }
+
+        .order-product-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .order-product-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #FF5722;
+        }
+
+        .order-footer {
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .order-btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .order-btn-outline {
+            border: 1px solid #ccc;
+            color: #666;
+            background-color: #fff;
+        }
+
+        .order-btn-primary {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+
+        /* 任务悬赏页样式 */
+        .task-card {
+            margin: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-category {
+            padding: 4px 8px;
+            background-color: #E3F2FD;
+            color: #2196F3;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .task-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .task-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .task-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #FF9800;
+        }
+
+        .task-deadline {
+            display: flex;
+            align-items: center;
+        }
+
+        .task-deadline i {
+            margin-right: 5px;
+        }
+
+        /* 发布按钮 */
+        .fab-button {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background-color: #4CAF50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+<h1 style="text-align: center; margin-bottom: 30px;">校园交换平台 - 用户页面子页面原型设计</h1>
+
+<div class="prototype-container">
+    <!-- 个人资料编辑页 -->
+    <div>
+        <div class="screen-title">个人资料编辑页</div>
+        <div class="screen">
+            <div class="status-bar">
+                <div class="time">9:41</div>
+                <div class="icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+            <div class="header">
+                <h1>个人资料编辑</h1>
+                <i class="fas fa-check" style="font-size: 20px;"></i>
+            </div>
+            <div class="content">
+                <div class="form-group">
+                    <div class="form-label">头像</div>
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">用户名</div>
+                    <input type="text" class="form-input" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">邮箱</div>
+                    <input type="email" class="form-input" placeholder="请输入邮箱">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">联系方式</div>
+                    <input type="text" class="form-input" placeholder="请输入联系方式">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">学校</div>
+                    <input type="text" class="form-input" placeholder="请输入学校名称">
+                </div>
+                <div class="form-group">
+                    <div class="form-label">个人简介</div>
+                    <textarea class="form-textarea" placeholder="请输入个人简介"></textarea>
+                </div>
+            </div>
+            <div class="tab-bar">
+                <div class="tab-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </div>
+                <div class="tab-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>任务</span>
+                </div>
+                <div class="tab-item">
+                    <i class="fas fa-comment"></i>
+                    <span>消息</span>
+                </div>
+                <div class="tab-item active">
+                    <i class="fas fa-user"></i>
+                    <span>我的</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 我的发布页 -->
+    <div>
+        <div class="screen-title">我的发布页</div>
+        <div class="screen">
+            <div class="status-bar">
+                <div class="time">9:41</div>
+                <div class="icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+            <div class="header">
+                <h1>我的发布</h1>
+            </div>
+            <div class="category-tabs">
+                <div class="category-tab active">全部</div>
+                <div class="category-tab">二手商品</div>
+                <div class="category-tab">任务悬赏</div>
+            </div>
+            <div class="content">
+                <div class="product-grid">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">iPhone 12 128GB 白色 95新</div>
+                            <div class="product-price">¥3999</div>
+                            <div class="product-meta">
+                                <span>信息学院</span>
+                                <span>2分钟前</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">计算机网络教材 第7版</div>
+                            <div class="product-price">¥20</div>
+                            <div class="product-meta">
+                                <span>计算机学院</span>
+                                <span>5分钟前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fab-button">
+                <i class="fas fa-plus"></i>
+            </div>
+            <div class="tab-bar">
+                <div class="tab-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </div>
+                <div class="tab-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>任务</span>
+                </div>
+                <div class="tab-item">
+                    <i class="fas fa-comment"></i>
+                    <span>消息</span>
+                </div>
+                <div class="tab-item active">
+                    <i class="fas fa-user"></i>
+                    <span>我的</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 我的收藏页 -->
+    <div>
+        <div class="screen-title">我的收藏页</div>
+        <div class="screen">
+            <div class="status-bar">
+                <div class="time">9:41</div>
+                <div class="icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+            <div class="header">
+                <h1>我的收藏</h1>
+            </div>
+            <div class="category-tabs">
+                <div class="category-tab active">全部</div>
+                <div class="category-tab">二手商品</div>
+                <div class="category-tab">任务悬赏</div>
+            </div>
+            <div class="content">
+                <div class="product-grid">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">iPhone 12 128GB 白色 95新</div>
+                            <div class="product-price">¥3999</div>
+                            <div class="product-meta">
+                                <span>信息学院</span>
+                                <span>2分钟前</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">计算机网络教材 第7版</div>
+                            <div class="product-price">¥20</div>
+                            <div class="product-meta">
+                                <span>计算机学院</span>
+                                <span>5分钟前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-bar">
+                <div class="tab-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </div>
+                <div class="tab-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>任务</span>
+                </div>
+                <div class="tab-item">
+                    <i class="fas fa-comment"></i>
+                    <span>消息</span>
+                </div>
+                <div class="tab-item active">
+                    <i class="fas fa-user"></i>
+                    <span>我的</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 我的订单页 -->
+    <div>
+        <div class="screen-title">我的订单页</div>
+        <div class="screen">
+            <div class="status-bar">
+                <div class="time">9:41</div>
+                <div class="icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+            <div class="header">
+                <h1>我的订单</h1>
+            </div>
+            <div class="order-tabs">
+                <div class="order-tab active">全部</div>
+                <div class="order-tab">待付款</div>
+                <div class="order-tab">已付款</div>
+                <div class="order-tab">已完成</div>
+                <div class="order-tab">已取消</div>
+            </div>
+            <div class="content">
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">订单编号：20240101001</div>
+                        <div class="order-status">待付款</div>
+                    </div>
+                    <div class="order-product">
+                        <div class="order-product-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="order-product-info">
+                            <div class="order-product-title">iPhone 12 128GB 白色 95新</div>
+                            <div class="order-product-price">¥3999</div>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <button class="order-btn order-btn-outline">取消订单</button>
+                        <button class="order-btn order-btn-primary">立即付款</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-bar">
+                <div class="tab-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </div>
+                <div class="tab-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>任务</span>
+                </div>
+                <div class="tab-item">
+                    <i class="fas fa-comment"></i>
+                    <span>消息</span>
+                </div>
+                <div class="tab-item active">
+                    <i class="fas fa-user"></i>
+                    <span>我的</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
